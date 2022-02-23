@@ -1,3 +1,4 @@
+from Arguments import *
 
 def raiseCommandArgumentError(argument: dict):
     MSG = f"No value found for argument '{argument['arg']}'({argument['argName']})"
@@ -8,5 +9,13 @@ def raiseNoCompileFileFoundError():
     raise Exception(MSG)
 
 def raiseNotProperDataTypeError(line_num, data_type):
-    MSG = f"Couldn't find '{data_type}' type... (line {line_num})"
+    MSG = f"Couldn't find '{data_type}' type... (line {line_num + 1})"
+    raise Exception(MSG)
+
+def raiseNoLineEndFlagFoundError(line_num):
+    MSG = f"Couldn't find '{END_LINE_FLAG['name']}' from line {line_num + 1}"
+    raise Exception(MSG)
+
+def raiseInvalidFunctionDeclarationError(line_num):
+    MSG = f"Invalid function declaration(line {line_num + 1})"
     raise Exception(MSG)
