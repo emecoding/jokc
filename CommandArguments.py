@@ -7,5 +7,7 @@ def addArg(arg: str, argName: str):
 
     return a
 
+FILE_NAME = addArg("-f", "file_name")
+COMPILE_DIRECTORY = addArg("-d", "compile_directory")
 EXE_NAME = addArg("-o", "name")
 
