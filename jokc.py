@@ -2,6 +2,8 @@ import sys
 from CommandArguments import *
 from Console import *
 
+#jokc -o name
+
 def argIsInEVERY_ARG(arg):
     for i in EVERY_ARG:
         if i["arg"] == arg:
