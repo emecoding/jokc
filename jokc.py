@@ -129,7 +129,8 @@ def parseJOKCFile():
         file.close()
 
     finalLines = []
-    for line_num in range(len(lines)):
+    line_num = 0
+    for l in range(len(lines)):
         line = lines[line_num]
         splitted_line = line.split(" ")
         if splitted_line[0] != "\n":
@@ -148,13 +149,15 @@ def parseJOKCFile():
                             else:
                                 function, functionLines = createFunction(ls, line_num)
                                 finalLines.insert(line_num, function)
+                                line_num += len(functionLines)
+                                if line_num >= len(lines):
+                                    line_num = len(lines) - 1
                                 break
                     continue
                 if hasLineEnd == -1:
                     raiseNoLineEndFlagFoundError(line_num)
                 elif ASSING_VALUE_FLAG["name"] in splitted_line:
                     if functioned == False:
-                        print(splitted_line, line_num)
                         attribute = createAttritubeFromLine(splitted_line, line_num)           
                         finalLines.insert(line_num, attribute)
                 else:
@@ -163,6 +166,11 @@ def parseJOKCFile():
             else:
                 attribute = convertListToString(line)
                 finalLines.insert(line_num, attribute)
+        else:
+            finalLines.insert(line_num, "\n")
+        line_num += 1
+        if line_num >= len(lines):
+            break    
 
     #print(finalLines)
     finalString: str = convertListToString(finalLines)
