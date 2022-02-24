@@ -54,13 +54,10 @@ def createAttritubeFromLine(line, line_number):
     Attribute: str = ""
     i = 0
     for l in line:
-        #print(l, EVERY_BUILT_IN_DATA_TYPE)
-        
         if l in EVERY_BUILT_IN_DATA_TYPE:
             dataType = line[i]
             name = line[i + 1]
             value = line[1 + 2]
-            #print(dataType, name, value)
             Attribute = f"{dataType} {name} = {value}"
             a = {"type": dataType, "name": name, "value": value}
             EVERY_ATTRIBUTE.append(a)
@@ -119,11 +116,10 @@ def createFunction(lines, line_num):
         else:
             finalLines.insert(ln, lines[line])
             ln += 1
-            
-    finalLines.append("}")
+        
 
     finalLinesStr = convertListToString(finalLines)
-    return finalLinesStr
+    return finalLinesStr, finalLines
 
 def parseJOKCFile():
     global FILE_TO_PARSE, FILE_TO_PASS_DATA
@@ -133,48 +129,40 @@ def parseJOKCFile():
         file.close()
 
     finalLines = []
-
-    line_num = 0
-    for line in lines:
+    for line_num in range(len(lines)):
+        line = lines[line_num]
         splitted_line = line.split(" ")
         if splitted_line[0] != "\n":
             isCommented = splitted_line[0].find(COMMENT_FLAG["name"])
-            if splitted_line[0] == "}":
-                line_num += 1
-                continue
+            functioned = False
             if isCommented == -1:
                 hasLineEnd = splitted_line[-1].find(END_LINE_FLAG["name"])
-                    #print(END_LINE_FLAG["name"], len(line), line)
                 if FUNCTION_FLAG["name"] in splitted_line:
-                    #func = createFunction(line, line_num)
+                    functioned = True
                     ls = []
                     for i in range(line_num, len(lines)):
                         splitted = lines[i].split(" ")
                         if splitted[0] != "\n":
-                            #print(lines[i])
-                            if splitted[0] != "}":
+                            if splitted[0] != "};\n":
                                 ls.append(lines[i])
                             else:
-                                function = createFunction(ls, line_num)
-                                count = line_num
-                                for f in function.splitlines():
-                                    finalLines.insert(count, f)
-                                    count += 1
+                                function, functionLines = createFunction(ls, line_num)
+                                finalLines.insert(line_num, function)
                                 break
-                
-                    line_num += 1
                     continue
-
                 if hasLineEnd == -1:
                     raiseNoLineEndFlagFoundError(line_num)
-                if ASSING_VALUE_FLAG["name"] in splitted_line:
-                    attribute = createAttritubeFromLine(splitted_line, line_num)           
+                elif ASSING_VALUE_FLAG["name"] in splitted_line:
+                    if functioned == False:
+                        print(splitted_line, line_num)
+                        attribute = createAttritubeFromLine(splitted_line, line_num)           
+                        finalLines.insert(line_num, attribute)
+                else:
+                    attribute = convertListToString(line)
                     finalLines.insert(line_num, attribute)
             else:
                 attribute = convertListToString(line)
                 finalLines.insert(line_num, attribute)
-
-        line_num += 1
 
     #print(finalLines)
     finalString: str = convertListToString(finalLines)

@@ -4,4 +4,4 @@ int INTEGER = 0;
 
 def main(){
 INTEGER = 2;
-}
+};
