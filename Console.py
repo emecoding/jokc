@@ -19,3 +19,7 @@ def raiseNoLineEndFlagFoundError(line_num):
 def raiseInvalidFunctionDeclarationError(line_num):
     MSG = f"Invalid function declaration(line {line_num + 1})"
     raise Exception(MSG)
+
+def raiseInvalidImportDeclarationError(line_num):
+    MSG = f"Invalid import declaration(line {line_num + 1})"
+    raise Exception(MSG)

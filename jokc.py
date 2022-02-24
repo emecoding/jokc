@@ -1,5 +1,6 @@
 from posixpath import splitext
 import sys, os
+from xml.dom.minidom import Attr
 from Console import *
 from Arguments import *
 
@@ -52,30 +53,24 @@ def compileCommands():
 
 def createAttritubeFromLine(line, line_number):
     Attribute: str = ""
-    i = 0
-    for l in line:
-        if l in EVERY_BUILT_IN_DATA_TYPE:
-            dataType = line[i]
-            name = line[i + 1]
-            value = line[1 + 2]
-            Attribute = f"{dataType} {name} = {value}"
-            a = {"type": dataType, "name": name, "value": value}
-            EVERY_ATTRIBUTE.append(a)
-            return Attribute
-        else:
-            for attribute in EVERY_ATTRIBUTE:
-                name = line[i]
-                value = line[i + 2]
-                if attribute["name"] == name:
-                    Attribute = f"{attribute['name']} = {value}"
-                    a = {"type": attribute["type"], "name": name, "value": value}
+    splitted_line = line.split(" ")
+    for i in EVERY_BUILT_IN_DATA_TYPE:
+        if i["name"] == splitted_line[0]:
+            for DATA_TYPE in EVERY_BUILT_IN_DATA_TYPE:
+                print(DATA_TYPE)
+                if i["name"] in DATA_TYPE["name"]:
+                    value = splitted_line[-1]
+                    Attribute = f"{DATA_TYPE['compensation']} {splitted_line[1]} = {value}"
+                    a = {"type": DATA_TYPE['name'], "name": splitted_line[1], "value": value}
                     EVERY_ATTRIBUTE.append(a)
                     return Attribute
-                else:
-                    raiseNotProperDataTypeError(line_number + 1, l)
-    i += 1
 
-    return Attribute
+    for attritube in EVERY_ATTRIBUTE:
+        if attritube["name"] == line[i]:
+            Attribute = f"{attritube['name']} = {attritube['value']}"
+            return Attribute
+
+    raiseNotProperDataTypeError(line_number, splitted_line[0])
 
 def convertListToString(lst):
     s: str = ""
@@ -121,6 +116,14 @@ def createFunction(lines, line_num):
     finalLinesStr = convertListToString(finalLines)
     return finalLinesStr, finalLines
 
+def createImport(line, line_num):
+    splitted_line = line.split(" ")
+    if len(splitted_line) != 2: raiseInvalidImportDeclarationError(line_num)
+
+    my_Str = f'{IMPORT_FLAG["compensation"]} {splitted_line[1]}'
+    return my_Str
+
+
 def parseJOKCFile():
     global FILE_TO_PARSE, FILE_TO_PASS_DATA
     lines = []
@@ -154,11 +157,17 @@ def parseJOKCFile():
                                     line_num = len(lines) - 1
                                 break
                     continue
+                elif splitted_line[0].find(IMPORT_FLAG["name"]) != -1:#IMPORT_FLAG["name"] in splitted_line:
+                    import_f = createImport(line, line_num)
+                    finalLines.insert(line_num, import_f)
+                    line_num += 1
+                    continue
+
                 if hasLineEnd == -1:
                     raiseNoLineEndFlagFoundError(line_num)
                 elif ASSING_VALUE_FLAG["name"] in splitted_line:
                     if functioned == False:
-                        attribute = createAttritubeFromLine(splitted_line, line_num)           
+                        attribute = createAttritubeFromLine(line, line_num)  
                         finalLines.insert(line_num, attribute)
                 else:
                     attribute = convertListToString(line)

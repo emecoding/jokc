@@ -1,8 +1,10 @@
+import "iostream"
+import "string"
+
 int INTEGER = 0;
 int SECOND_INTEGER = 1;
 int idk = 2;
-//INTEGER = 1;
-//char STRING = "idk";
+string STR = "idk";
 
 def IDK(){
 idk = 69;

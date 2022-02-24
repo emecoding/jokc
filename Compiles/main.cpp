@@ -1,8 +1,10 @@
+#include "iostream"
+#include "string"
+
 int INTEGER = 0;
 int SECOND_INTEGER = 1;
 int idk = 2;
-//INTEGER = 1;
-//char STRING = "idk";
+std::string STR = "idk";
 
 void IDK(){
 idk = 69;
