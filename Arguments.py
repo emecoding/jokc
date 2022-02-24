@@ -1,7 +1,7 @@
 EVERY_COMPILE_ARG = []
 EVERY_FLAG = []
 EVERY_BUILT_IN_DATA_TYPE = []
-EVERY_BUILD_IN_FUNCTION = []
+EVERY_BUILT_IN_FUNCTION = []
 
 def addBuiltInDataType(name, compensation:str=""):
     if compensation == "":
@@ -25,13 +25,15 @@ def addCommandArg(arg: str, argName: str):
     return a
 
 def addBuiltIntFunction(name, compensation, args):
-    global EVERY_BUILD_IN_FUNCTION
+    global EVERY_BUILT_IN_FUNCTION
     func = {"name": name, "compensation": compensation, "args": args}
-    EVERY_BUILD_IN_FUNCTION.append(func)
+    EVERY_BUILT_IN_FUNCTION.append(func)
     return func
 
 INT = addBuiltInDataType("int")
 STRING = addBuiltInDataType("string", compensation="std::string")
+
+PRINT_FUNCTION = addBuiltIntFunction("print", compensation="std::cout << a1 << std::endl", args="a1")
 
 ASSING_VALUE_FLAG = addFlag("=")
 END_LINE_FLAG = addFlag(";")

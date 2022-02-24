@@ -8,6 +8,8 @@ string STR = "idk";
 
 def IDK(){
 idk = 69;
+//std::cout << idk << std::endl;
+print (idk);
 };
 
 def main(){

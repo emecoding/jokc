@@ -57,7 +57,6 @@ def createAttritubeFromLine(line, line_number):
     for i in EVERY_BUILT_IN_DATA_TYPE:
         if i["name"] == splitted_line[0]:
             for DATA_TYPE in EVERY_BUILT_IN_DATA_TYPE:
-                print(DATA_TYPE)
                 if i["name"] in DATA_TYPE["name"]:
                     value = splitted_line[-1]
                     Attribute = f"{DATA_TYPE['compensation']} {splitted_line[1]} = {value}"
@@ -123,6 +122,27 @@ def createImport(line, line_num):
     my_Str = f'{IMPORT_FLAG["compensation"]} {splitted_line[1]}'
     return my_Str
 
+def createBuiltInFunctionCall(line, line_num, builtInFunction, functionToCall):
+    #print(builtInFunction, functionToCall)
+    args = functionToCall[1].replace("(", "")
+    args = args.replace(")", "")
+    args = args.replace(END_LINE_FLAG["name"], "")
+    f = builtInFunction["compensation"] + END_LINE_FLAG["compensation"]
+    f = f.replace("a1", args)
+    f = f.replace("\n", "")
+    
+    return f
+
+def checkForBuiltInFunctionCall(line, line_num):
+    splitted_line = line.split(" ")
+    if len(splitted_line) > 1:
+        if splitted_line[1].find("(") != -1 and splitted_line[1].find(")") != -1 and (FUNCTION_FLAG["name"] not in splitted_line):
+                for i in EVERY_BUILT_IN_FUNCTION:
+                    #rint(splitted_line)
+                    if splitted_line[0] == i["name"]:
+                        return createBuiltInFunctionCall(line, line_num, i, splitted_line)
+    
+    return False
 
 def parseJOKCFile():
     global FILE_TO_PARSE, FILE_TO_PASS_DATA
@@ -148,7 +168,11 @@ def parseJOKCFile():
                         splitted = lines[i].split(" ")
                         if splitted[0] != "\n":
                             if splitted[0] != "};\n":
-                                ls.append(lines[i])
+                                func = checkForBuiltInFunctionCall(lines[i], line_num);
+                                if func != False:
+                                    finalLines.insert(line_num, func + "\n")
+                                else:
+                                    ls.append(lines[i])
                             else:
                                 function, functionLines = createFunction(ls, line_num)
                                 finalLines.insert(line_num, function)
@@ -162,7 +186,6 @@ def parseJOKCFile():
                     finalLines.insert(line_num, import_f)
                     line_num += 1
                     continue
-
                 if hasLineEnd == -1:
                     raiseNoLineEndFlagFoundError(line_num)
                 elif ASSING_VALUE_FLAG["name"] in splitted_line:
@@ -170,8 +193,16 @@ def parseJOKCFile():
                         attribute = createAttritubeFromLine(line, line_num)  
                         finalLines.insert(line_num, attribute)
                 else:
-                    attribute = convertListToString(line)
-                    finalLines.insert(line_num, attribute)
+                    func = checkForBuiltInFunctionCall(line, line_num);
+                    print(func)
+                    if func != False:
+                        finalLines.insert(line_num, func)
+
+                        attribute = convertListToString(func)
+                        finalLines.insert(line_num, attribute)
+                    else:
+                        attribute = convertListToString(line)
+                        finalLines.insert(line_num, attribute)
             else:
                 attribute = convertListToString(line)
                 finalLines.insert(line_num, attribute)
