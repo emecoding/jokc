@@ -23,3 +23,7 @@ def raiseInvalidFunctionDeclarationError(line_num):
 def raiseInvalidImportDeclarationError(line_num):
     MSG = f"Invalid import declaration(line {line_num + 1})"
     raise Exception(MSG)
+
+def raiseInvalidCompilerArgumentError(arg):
+    MSG = f"'{arg}' is not a regonized argument for jokc compiler..."
+    raise Exception(MSG)
