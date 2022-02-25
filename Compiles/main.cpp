@@ -10,14 +10,12 @@ void IDK(){
 idk = 69;
 //std::cout << idk << std::endl;
 std::cout << idk << std::endl;
-std::cout << idk << std::endl;std::cout << idk << std::endl;};
-
+std::cout << idk << std::endl;
 void main(){
 INTEGER = 2;
 SECOND_INTEGER = 2222;
 IDK();
 };
-
 
 
 

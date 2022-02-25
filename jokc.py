@@ -138,8 +138,8 @@ def checkForBuiltInFunctionCall(line, line_num):
     if len(splitted_line) > 1:
         if splitted_line[1].find("(") != -1 and splitted_line[1].find(")") != -1 and (FUNCTION_FLAG["name"] not in splitted_line):
                 for i in EVERY_BUILT_IN_FUNCTION:
-                    #rint(splitted_line)
                     if splitted_line[0] == i["name"]:
+                        print("II")
                         return createBuiltInFunctionCall(line, line_num, i, splitted_line)
     
     return False
@@ -171,6 +171,7 @@ def parseJOKCFile():
                                 func = checkForBuiltInFunctionCall(lines[i], line_num);
                                 if func != False:
                                     finalLines.insert(line_num, func + "\n")
+                                    print(func)
                                 else:
                                     ls.append(lines[i])
                             else:
@@ -193,16 +194,17 @@ def parseJOKCFile():
                         attribute = createAttritubeFromLine(line, line_num)  
                         finalLines.insert(line_num, attribute)
                 else:
-                    func = checkForBuiltInFunctionCall(line, line_num);
-                    print(func)
+                    func = checkForBuiltInFunctionCall(line, line_num)
+                    #print(func)
                     if func != False:
                         finalLines.insert(line_num, func)
-
-                        attribute = convertListToString(func)
-                        finalLines.insert(line_num, attribute)
+                        #print(func, line)
+                        #print(finalLines)
                     else:
                         attribute = convertListToString(line)
                         finalLines.insert(line_num, attribute)
+                    
+                    line_num += 1
             else:
                 attribute = convertListToString(line)
                 finalLines.insert(line_num, attribute)
