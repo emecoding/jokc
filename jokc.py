@@ -2,6 +2,7 @@
 from Console import *
 from Arguments import *
 from ConsoleCommandParser import *
+from JOKCParser import *
 
 #jokc -f jockcs/Attribute.jokc -d Compiles/ -o test_run
 
@@ -13,7 +14,9 @@ EXE_FILE_FULL_DIRECTORY: str = ""
 
 EVERY_ATTRIBUTE = []
 
-    
+PARSER = JOCKParser()
+
+
 if __name__ == "__main__":
     #EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PASS_DATA, FILE_TO_PARSE = compileCommands()
     EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PARSE = compileCommands()
@@ -21,7 +24,8 @@ if __name__ == "__main__":
         raiseNoCompileFileFoundError()
     else:
         #parseJOKCFile()
-        pass
+        PARSER.setFileToParse(FILE_TO_PARSE)
+        PARSER.parse()
 
 
 
