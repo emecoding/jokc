@@ -1,13 +1,23 @@
-
-from typing import List, final
+import os
 from Arguments import *
 from Console import *
 
 class JOCKParser:
     def __init__(self):
         self.__file_to_parse = ""
+        self.__file_to_pass_data = ""
+        self.__exe_file_name = ""
+
+        self.__run_exe_stright: bool = False
 
         self.__EVERY_ATTRITUBE = []
+
+    def __getCompileCppToExeCommands(self):
+        #cmd = 'g++ -g $(find . -type f -iregex ".*\.cpp") glad.c -o idk -lglfw -ldl -lGL -I/home/eme/C++/OpenGl/Test/include'
+        cmd1 = f'g++ {self.__file_to_pass_data} -o {self.__exe_file_name}'
+        cmd2 = f'./{self.__exe_file_name}'
+
+        return cmd1, cmd2
 
     def __convertListToString(self, lst: list):
         s: str = ""
@@ -15,6 +25,26 @@ class JOCKParser:
             s += i
 
         return s
+
+    def __compileCppFile(self):
+        cmd1, cmd2 = self.__getCompileCppToExeCommands()
+        print("Starting to compile to .exe file...")
+        os.system(cmd1)
+        print("Compiling to .exe done...")
+        if self.__run_exe_stright:
+            os.system(cmd2)
+
+    def __writeToCppFile(self, lines):
+        print("Starting to write to .cpp file...")
+        self.__file_to_pass_data = self.__file_to_pass_data.replace(" ", "")
+
+        with open(self.__file_to_pass_data, "w") as file:
+            file.write(self.__convertListToString(lines))
+            file.close()
+
+        print("Writing to .cpp file done...")
+
+        self.__compileCppFile()
 
     def __getLines(self):
         lines = []
@@ -71,8 +101,17 @@ class JOCKParser:
     def setFileToParse(self, file):
         self.__file_to_parse = file
 
+    def setFileToPassData(self, file):
+        self.__file_to_pass_data = file
+
+    def setRunExeStraight(self, b):
+        self.__run_exe_stright = b
+
+    def setExeFileName(self, name):
+        self.__exe_file_name = name
 
     def parse(self):
+        print("Starting the parse....")
         Lines = self.__getLines()
         finalLines: list = []
         line_num = 0
@@ -84,5 +123,6 @@ class JOCKParser:
             attritube, finalLines = self.__checkForAttributeAssignment(Line, line_num, finalLines)
             line_num += 1
 
-        print(self.__convertListToString(finalLines))
+        print("Parsing done...")
+        self.__writeToCppFile(finalLines)
         
