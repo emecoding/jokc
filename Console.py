@@ -1,3 +1,4 @@
+from shutil import ExecError
 from Arguments import *
 
 def raiseCommandArgumentError(argument: dict):
@@ -26,4 +27,8 @@ def raiseInvalidImportDeclarationError(line_num):
 
 def raiseInvalidCompilerArgumentError(arg):
     MSG = f"'{arg}' is not a regonized argument for jokc compiler..."
+    raise Exception(MSG)
+
+def raiseInvalidAttritubeAssignmentError(line_num):
+    MSG = f"Invalid attritube assigment at line {line_num}"
     raise Exception(MSG)
