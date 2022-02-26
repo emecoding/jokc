@@ -32,7 +32,9 @@ class JOCKParser:
         os.system(cmd1)
         print("Compiling to .exe done...")
         if self.__run_exe_stright:
+            print("Running the program...")
             os.system(cmd2)
+            
 
     def __writeToCppFile(self, lines):
         print("Starting to write to .cpp file...")
@@ -91,8 +93,55 @@ class JOCKParser:
                         return attritube_str, finalLines
             else:
                 raiseInvalidAttritubeAssignmentError(lineNum)
-        else: return False, None
+        else: return False, finalLines
+    
+    def __parseLine(self, Line, lineNum, finalLines):
+        Line = Line.replace(NEW_LINE_FLAG, "")
+        #print(Line)
+        self.__checkForEndLineFlag(Line, lineNum)
+        attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
+
+        if attritube == False:
+            finalLines.insert(lineNum, Line + NEW_LINE_FLAG)
+
+        #print(finalLines, "II")
+        return finalLines
+
+    def __isFunctionReturnType(self, line):
+        for t in EVERY_BUILT_IN_FUNCTION_RETURN_TYPE:
+            if line.find(t["name"]) != -1:
+                return t
         
+        return False
+
+    def __gatherFunctionLines(self, Lines: list, lineNum: int):
+        funcLines = []
+        funcName = ""
+        for l in range(lineNum, len(Lines)):
+            line = Lines[l]
+            if line != "}" + END_LINE_FLAG["name"]:
+                funcReturnType = self.__isFunctionReturnType(line)
+                if funcReturnType != False:
+                    splittedLine = line.split(" ")
+                    funcName = splittedLine[1]
+                    funcName = funcName.replace("(", "")
+                    funcName = funcName.replace(")", "")
+                    funcName = funcName.replace("{", "")
+                    funcName = funcName.replace(NEW_LINE_FLAG, "")
+
+                    a = f"{funcReturnType['compensation']} {funcName}()" + '{' + NEW_LINE_FLAG
+                    funcLines.insert(l, a)
+                else:
+                    if line != NEW_LINE_FLAG:
+                        line = line.replace(NEW_LINE_FLAG, "")
+                        self.__parseLine(line, l, funcLines)
+
+        #print(funcLines)
+
+        #funcLines.append("}" + END_LINE_FLAG["compensation"])
+
+        return funcLines
+
 
     def __checkForEndLineFlag(self, Line: str, lineNum: int):
         hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
@@ -117,12 +166,26 @@ class JOCKParser:
         line_num = 0
         for L in range(len(Lines)):
             Line = Lines[line_num]
-            Line = Line.replace(NEW_LINE_FLAG, "")
-
-            self.__checkForEndLineFlag(Line, line_num)
-            attritube, finalLines = self.__checkForAttributeAssignment(Line, line_num, finalLines)
+            if Line != NEW_LINE_FLAG:
+                Line = Line.replace(NEW_LINE_FLAG, "")
+                funcReturnType = self.__isFunctionReturnType(Line)
+                if funcReturnType != False: 
+                    funcLines = self.__gatherFunctionLines(Lines, line_num)
+                    #print(funcLines[1][-1], "LINES")
+                    for funcLine in funcLines:
+                        finalLines.insert(line_num, funcLine)
+                        line_num += 1
+                        if line_num >= len(Lines):
+                            line_num = len(Lines) - 1
+                    continue
+                else:
+                    if Line.find("};") == -1:
+                        finalLines = self.__parseLine(Line, line_num, finalLines)
             line_num += 1
+            if line_num >= len(Lines):
+                break
 
         print("Parsing done...")
+        #print(finalLines)
         self.__writeToCppFile(finalLines)
         

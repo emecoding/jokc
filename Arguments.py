@@ -2,6 +2,7 @@ EVERY_COMPILE_ARG = []
 EVERY_FLAG = []
 EVERY_BUILT_IN_DATA_TYPE = []
 EVERY_BUILT_IN_FUNCTION = []
+EVERY_BUILT_IN_FUNCTION_RETURN_TYPE = []
 
 def addBuiltInDataType(name, compensation:str=""):
     if compensation == "":
@@ -30,6 +31,14 @@ def addBuiltIntFunction(name, compensation, args):
     EVERY_BUILT_IN_FUNCTION.append(func)
     return func
 
+def addFunctionReturnType(name, compensation:str=""):
+    if compensation == "":
+        compensation = name
+    f = {"name": name, "compensation": compensation}
+    EVERY_BUILT_IN_FUNCTION_RETURN_TYPE.append(f)
+    return f
+
+
 NEW_LINE_FLAG = "\n"
 
 INT = addBuiltInDataType("int")
@@ -40,8 +49,12 @@ PRINT_FUNCTION = addBuiltIntFunction("print", compensation="std::cout << a1 << s
 ASSING_VALUE_FLAG = addFlag("=")
 END_LINE_FLAG = addFlag(";")
 COMMENT_FLAG = addFlag("//")
-FUNCTION_FLAG = addFlag("def", compensation="void")
 IMPORT_FLAG = addFlag("import", compensation="#include")
+
+FUNCTION_VOID_FLAG = addFunctionReturnType("def", compensation="void")
+FUNCTION_INT_FLAG = addFunctionReturnType("dif", compensation="int")
+
+
 
 
 FILE_NAME = addCommandArg("-f", "file_name")
