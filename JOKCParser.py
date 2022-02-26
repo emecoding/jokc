@@ -18,8 +18,9 @@ class JOCKParser:
         splittedLine = Line.split(ASSING_VALUE_FLAG["name"])
         print(splittedLine)
 
-    def __checkForEndLineFlag(self, Line: str):
-        pass
+    def __checkForEndLineFlag(self, Line: str, lineNum: int):
+        hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
+        if hasEndLineFlag == False: raiseNoLineEndFlagFoundError(lineNum)
 
     def setFileToParse(self, file):
         self.__file_to_parse = file
@@ -31,7 +32,7 @@ class JOCKParser:
         line_num = 0
         for L in range(len(Lines)):
             Line = Lines[line_num]
-            self.__checkForEndLineFlag(Line)
+            self.__checkForEndLineFlag(Line, line_num)
 
 
             line_num += 1
