@@ -102,8 +102,7 @@ class JOCKParser:
     
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
-        if self.__lineIsCommented == False:
-        #print(Line)
+        if self.__lineIsCommented(Line) == False:
             self.__checkForEndLineFlag(Line, lineNum)
             attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
 
