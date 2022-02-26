@@ -100,14 +100,27 @@ class JOCKParser:
                 raiseInvalidAttritubeAssignmentError(lineNum)
         else: return False, finalLines
     
+    def __lineIsImport(self, Line):
+        if Line.find(IMPORT_FLAG["name"]) != -1:
+            splittedLine = Line.split(IMPORT_FLAG["name"])
+            importName = splittedLine[1]
+            return IMPORT_FLAG["compensation"] + importName
+        
+        return False
+
+
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
         if self.__lineIsCommented(Line) == False:
-            self.__checkForEndLineFlag(Line, lineNum)
-            attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
+            lineIsImport = self.__lineIsImport(Line)
+            if lineIsImport == False:
+                self.__checkForEndLineFlag(Line, lineNum)
+                attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
 
-            if attritube == False:
-                finalLines.insert(lineNum, Line + NEW_LINE_FLAG)
+                if attritube == False:
+                    finalLines.insert(lineNum, Line + NEW_LINE_FLAG)
+            else:
+                finalLines.insert(lineNum, lineIsImport + NEW_LINE_FLAG)
 
         #print(finalLines, "II")
         return finalLines
