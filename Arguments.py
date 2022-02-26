@@ -30,6 +30,8 @@ def addBuiltIntFunction(name, compensation, args):
     EVERY_BUILT_IN_FUNCTION.append(func)
     return func
 
+NEW_LINE_FLAG = "\n"
+
 INT = addBuiltInDataType("int")
 STRING = addBuiltInDataType("string", compensation="std::string")
 
