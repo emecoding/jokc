@@ -1,0 +1,6 @@
+int INTEGER = 420;
+
+dif main(){
+INTEGER = 69;
+return 0;
+};
