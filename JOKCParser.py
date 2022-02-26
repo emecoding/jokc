@@ -56,6 +56,11 @@ class JOCKParser:
 
         return lines
 
+    def __lineIsCommented(self, line):
+        if line.find(COMMENT_FLAG["name"]) != -1:
+            return True
+        return False
+
     def __checkForAttributeAssignment(self, Line: str, lineNum: int, finalLines: list):
         if Line.find(ASSING_VALUE_FLAG["name"]) != -1:
             splittedLine = Line.split(ASSING_VALUE_FLAG["name"])
@@ -97,12 +102,13 @@ class JOCKParser:
     
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
+        if self.__lineIsCommented == False:
         #print(Line)
-        self.__checkForEndLineFlag(Line, lineNum)
-        attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
+            self.__checkForEndLineFlag(Line, lineNum)
+            attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
 
-        if attritube == False:
-            finalLines.insert(lineNum, Line + NEW_LINE_FLAG)
+            if attritube == False:
+                finalLines.insert(lineNum, Line + NEW_LINE_FLAG)
 
         #print(finalLines, "II")
         return finalLines
