@@ -1,3 +1,4 @@
+
 from Arguments import *
 from Console import *
 
@@ -13,12 +14,25 @@ class JOCKParser:
 
         return lines
 
+    def __checkForAttributeAssignment(self, Line: str):
+        splittedLine = Line.split(ASSING_VALUE_FLAG["name"])
+        print(splittedLine)
+
+    def __checkForEndLineFlag(self, Line: str):
+        pass
+
     def setFileToParse(self, file):
         self.__file_to_parse = file
 
 
-    
-
     def parse(self):
-        print(self.__getLines())
+        Lines = self.__getLines()
+
+        line_num = 0
+        for L in range(len(Lines)):
+            Line = Lines[line_num]
+            self.__checkForEndLineFlag(Line)
+
+
+            line_num += 1
         
