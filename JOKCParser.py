@@ -138,7 +138,7 @@ class JOCKParser:
 
         #print(funcLines)
 
-        funcLines.append("}" + END_LINE_FLAG["compensation"])
+        #funcLines.append("}" + END_LINE_FLAG["compensation"])
 
         return funcLines
 

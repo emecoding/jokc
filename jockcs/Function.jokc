@@ -1,6 +1,13 @@
+
 int INTEGER = 420;
+
+def test(){
+int i = 0;
+};
 
 dif main(){
 INTEGER = 69;
+test();
 return 0;
 };
+
