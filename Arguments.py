@@ -1,3 +1,6 @@
+from ast import arg
+from BuiltInFunctionContents import *
+
 EVERY_COMPILE_ARG = []
 EVERY_FLAG = []
 EVERY_BUILT_IN_DATA_TYPE = []
@@ -44,7 +47,8 @@ NEW_LINE_FLAG = "\n"
 INT = addBuiltInDataType("int")
 STRING = addBuiltInDataType("string", compensation="std::string")
 
-PRINT_FUNCTION = addBuiltIntFunction("print", compensation="std::cout << a1 << std::endl", args=["a1"], requiredImports=["iostream"])
+PRINT_FUNCTION = addBuiltIntFunction("print", compensation=PRINT, args=["a1"], requiredImports=["iostream"])
+GET_INPUT_FUNCTION = addBuiltIntFunction("input", compensation=INPUT, args=["result", "text"], requiredImports=["iostream"])
 
 ASSING_VALUE_FLAG = addFlag("=")
 END_LINE_FLAG = addFlag(";")
