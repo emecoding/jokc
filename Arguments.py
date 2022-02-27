@@ -1,4 +1,3 @@
-from ast import arg
 from BuiltInFunctionContents import *
 
 EVERY_COMPILE_ARG = []
@@ -7,10 +6,10 @@ EVERY_BUILT_IN_DATA_TYPE = []
 EVERY_BUILT_IN_FUNCTION = []
 EVERY_BUILT_IN_FUNCTION_RETURN_TYPE = []
 
-def addBuiltInDataType(name, compensation:str=""):
+def addBuiltInDataType(name, compensation:str="", requiredImports:list=[]):
     if compensation == "":
         compensation = name
-    f = {"name": name, "compensation": compensation}
+    f = {"name": name, "compensation": compensation, "requiredImports": requiredImports}
     EVERY_BUILT_IN_DATA_TYPE.append(f)
     return f
 
@@ -45,7 +44,7 @@ def addFunctionReturnType(name, compensation:str=""):
 NEW_LINE_FLAG = "\n"
 
 INT = addBuiltInDataType("int")
-STRING = addBuiltInDataType("string", compensation="std::string")
+STRING = addBuiltInDataType("string", compensation="std::string", requiredImports=["string"])
 
 PRINT_FUNCTION = addBuiltIntFunction("print", compensation=PRINT, args=["a1"], requiredImports=["iostream"])
 GET_INPUT_FUNCTION = addBuiltIntFunction("input", compensation=INPUT, args=["result", "text"], requiredImports=["iostream"])

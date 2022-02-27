@@ -80,6 +80,12 @@ class JOCKParser:
                 
                 for DATATYPE in EVERY_BUILT_IN_DATA_TYPE:
                     if DATATYPE["name"] == type:
+                        for IMPORT in DATATYPE["requiredImports"]:
+                            if IMPORT not in self.__EVERY_IMPORT:
+                                self.__EVERY_IMPORT.append(IMPORT)
+                                finalLines.insert(0, IMPORT_FLAG["compensation"] + f" <{IMPORT}>{NEW_LINE_FLAG}")
+                                break
+
                         attritube_str = f"{DATATYPE['compensation']} {name} {ASSING_VALUE_FLAG['compensation']} {value}{END_LINE_FLAG['compensation']}{NEW_LINE_FLAG}"
                         finalLines.insert(lineNum, attritube_str)
                         a = {"type": type, "name": name, "value": value}

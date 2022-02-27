@@ -1,8 +1,15 @@
+//import "string"
+//import "iostream"
+
 int MY_INTEGER = 69;
 
 
 dif main(){
+string RESULT = "";
+string STTR = "write: ";
 print(MY_INTEGER);
 print(1);
+input(RESULT, STTR);
+print(RESULT);
 return 0;
 };
