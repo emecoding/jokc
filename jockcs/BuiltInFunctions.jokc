@@ -1,0 +1,8 @@
+int MY_INTEGER = 69;
+
+
+dif main(){
+print(MY_INTEGER);
+print(1);
+return 0;
+};
