@@ -209,7 +209,6 @@ class JOCKParser:
 
 
     def __checkForEndLineFlag(self, Line: str, lineNum: int):
-        print(len(Line), lineNum)
         if len(Line) != 0:
             hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
             if hasEndLineFlag == False: raiseNoLineEndFlagFoundError(lineNum)
