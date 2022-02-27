@@ -11,6 +11,7 @@ class JOCKParser:
         self.__run_exe_stright: bool = False
 
         self.__EVERY_ATTRITUBE = []
+        self.__EVERY_IMPORT = []
 
     def __getCompileCppToExeCommands(self):
         #cmd = 'g++ -g $(find . -type f -iregex ".*\.cpp") glad.c -o idk -lglfw -ldl -lGL -I/home/eme/C++/OpenGl/Test/include'
@@ -33,6 +34,7 @@ class JOCKParser:
         print("Compiling to .exe done...")
         if self.__run_exe_stright:
             print("Running the program...")
+            print("--------------------------------------------")
             os.system(cmd2)
             
 
@@ -55,6 +57,11 @@ class JOCKParser:
             file.close()
 
         return lines
+
+    def __lineIsCommented(self, line):
+        if line.find(COMMENT_FLAG["name"]) != -1:
+            return True
+        return False
 
     def __checkForAttributeAssignment(self, Line: str, lineNum: int, finalLines: list):
         if Line.find(ASSING_VALUE_FLAG["name"]) != -1:
@@ -95,16 +102,75 @@ class JOCKParser:
                 raiseInvalidAttritubeAssignmentError(lineNum)
         else: return False, finalLines
     
+    def __lineIsImport(self, Line):
+        if Line.find(IMPORT_FLAG["name"]) != -1:
+            splittedLine = Line.split(IMPORT_FLAG["name"])
+            importName = splittedLine[1]
+            importName = importName.replace(" ", "")
+            return IMPORT_FLAG["compensation"] + importName, importName.replace('"', "")
+        
+        return False, None
+
+    def __lineIsBuiltInFunction(self, Line, lineNum):
+        splittedLine = Line.split("(")
+        if len(splittedLine) == 2:
+            funcName = splittedLine[0]
+            for func in EVERY_BUILT_IN_FUNCTION:
+                if func["name"] == funcName:
+                    imports = func["requiredImports"]
+                    args = func["args"]
+                    finalFunc = func["compensation"]
+
+                    
+                    givenAttritubes = splittedLine[1]
+                    givenAttritubes = givenAttritubes.replace(")", "")
+                    givenAttritubes = givenAttritubes.replace(END_LINE_FLAG["name"], "")
+                    givenAttritubes = givenAttritubes.replace(",", "")
+                    givenAttritubes = givenAttritubes.split(" ")
+                    
+                    if len(givenAttritubes) != len(args): raiseInvalidFunctionDeclarationError(lineNum)
+
+                    for arg in range(len(args)):
+                        finalFunc = finalFunc.replace(args[arg], givenAttritubes[arg])
+                    
+                    finalFunc = f"{finalFunc}{END_LINE_FLAG['compensation']}{NEW_LINE_FLAG}"
+                    return finalFunc, imports
+
+
+        return False, None
+
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
-        #print(Line)
-        self.__checkForEndLineFlag(Line, lineNum)
-        attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
+        if self.__lineIsCommented(Line) == False:
 
-        if attritube == False:
-            finalLines.insert(lineNum, Line + NEW_LINE_FLAG)
+            lineIsImport, importName = self.__lineIsImport(Line)
+            lineIsBuiltInFunction, requiredImports = self.__lineIsBuiltInFunction(Line, lineNum)
+            if lineIsImport:
+                if importName not in self.__EVERY_IMPORT:
+                    print(importName, "II")
+                    self.__EVERY_IMPORT.append(importName)
+                    finalLines.insert(lineNum, lineIsImport + NEW_LINE_FLAG)
+                return finalLines
+            elif lineIsBuiltInFunction:
+                for IMPORT in requiredImports:
+                    if IMPORT not in self.__EVERY_IMPORT:
+                        print(IMPORT, "IMPORT")
+                        self.__EVERY_IMPORT.append(IMPORT)
+                        r = f"{IMPORT_FLAG['compensation']} <{IMPORT}>{NEW_LINE_FLAG}"
+                        print(r, "IMPORTY")
+                        finalLines.insert(0, r)
 
-        #print(finalLines, "II")
+                finalLines.insert(lineNum, lineIsBuiltInFunction)
+
+                return finalLines
+
+            self.__checkForEndLineFlag(Line, lineNum)
+            attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
+
+            if attritube == False:
+                finalLines.insert(lineNum, Line + NEW_LINE_FLAG)
+
+
         return finalLines
 
     def __isFunctionReturnType(self, line):

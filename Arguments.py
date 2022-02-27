@@ -25,9 +25,9 @@ def addCommandArg(arg: str, argName: str):
 
     return a
 
-def addBuiltIntFunction(name, compensation, args):
+def addBuiltIntFunction(name:str, compensation:str, args:list, requiredImports: list):
     global EVERY_BUILT_IN_FUNCTION
-    func = {"name": name, "compensation": compensation, "args": args}
+    func = {"name": name, "compensation": compensation, "args": args, "requiredImports": requiredImports}
     EVERY_BUILT_IN_FUNCTION.append(func)
     return func
 
@@ -44,7 +44,7 @@ NEW_LINE_FLAG = "\n"
 INT = addBuiltInDataType("int")
 STRING = addBuiltInDataType("string", compensation="std::string")
 
-PRINT_FUNCTION = addBuiltIntFunction("print", compensation="std::cout << a1 << std::endl", args="a1")
+PRINT_FUNCTION = addBuiltIntFunction("print", compensation="std::cout << a1 << std::endl", args=["a1"], requiredImports=["iostream"])
 
 ASSING_VALUE_FLAG = addFlag("=")
 END_LINE_FLAG = addFlag(";")
