@@ -56,6 +56,8 @@ class JOCKParser:
             lines = file.readlines()
             file.close()
 
+        lines.insert(0, NEW_LINE_FLAG)
+        lines[-1] += NEW_LINE_FLAG
         return lines
 
     def __lineIsCommented(self, line):
@@ -147,17 +149,14 @@ class JOCKParser:
             lineIsBuiltInFunction, requiredImports = self.__lineIsBuiltInFunction(Line, lineNum)
             if lineIsImport:
                 if importName not in self.__EVERY_IMPORT:
-                    print(importName, "II")
                     self.__EVERY_IMPORT.append(importName)
                     finalLines.insert(lineNum, lineIsImport + NEW_LINE_FLAG)
                 return finalLines
             elif lineIsBuiltInFunction:
                 for IMPORT in requiredImports:
                     if IMPORT not in self.__EVERY_IMPORT:
-                        print(IMPORT, "IMPORT")
                         self.__EVERY_IMPORT.append(IMPORT)
                         r = f"{IMPORT_FLAG['compensation']} <{IMPORT}>{NEW_LINE_FLAG}"
-                        print(r, "IMPORTY")
                         finalLines.insert(0, r)
 
                 finalLines.insert(lineNum, lineIsBuiltInFunction)
@@ -210,8 +209,10 @@ class JOCKParser:
 
 
     def __checkForEndLineFlag(self, Line: str, lineNum: int):
-        hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
-        if hasEndLineFlag == False: raiseNoLineEndFlagFoundError(lineNum)
+        print(len(Line), lineNum)
+        if len(Line) != 0:
+            hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
+            if hasEndLineFlag == False: raiseNoLineEndFlagFoundError(lineNum)
 
     def setFileToParse(self, file):
         self.__file_to_parse = file
