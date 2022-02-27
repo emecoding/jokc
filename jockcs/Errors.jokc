@@ -1,3 +1,11 @@
+
+def idk(){
+print("DD");
+};
+
 dif main(){
+print("ii");
+idk();
 return 0;
 };
+
