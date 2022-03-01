@@ -29,6 +29,7 @@ if __name__ == "__main__":
         PARSER.setFileToParse(FILE_TO_PARSE)
         PARSER.setFileToPassData(EXE_FILE_FULL_DIRECTORY)
         PARSER.setExeFileName(EXE_FILE_NAME)
+        PARSER.addIncludeDirectory(INCLUDE_DIRECTORY_PATH)
         PARSER.parse()
 
 
