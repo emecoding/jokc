@@ -4,7 +4,7 @@ from Arguments import *
 from ConsoleCommandParser import *
 from JOKCParser import *
 
-#jokc -f jockcs/Attribute.jokc -d Compiles/ -o test_run
+#jokc -f jockcs/Math.jokc -d Compiles/ -o Compiles/test_run -i includes/
 
 FILE_TO_PARSE: str = ""
 FILE_TO_PASS_DATA: str = ""
@@ -20,8 +20,8 @@ PARSER.setRunExeStraight(False)
 
 if __name__ == "__main__":
     #EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PASS_DATA, FILE_TO_PARSE = compileCommands()
-    EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PARSE = compileCommands()
-    print(EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PARSE)
+    EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PARSE, INCLUDE_DIRECTORY_PATH = compileCommands()
+    #print(EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PARSE, INCLUDE_DIRECTORY_PATH)
     if FILE_TO_PARSE == "":
         raiseNoCompileFileFoundError()
     else:
