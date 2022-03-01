@@ -15,7 +15,7 @@ EXE_FILE_FULL_DIRECTORY: str = ""
 EVERY_ATTRIBUTE = []
 
 PARSER = JOCKParser()
-PARSER.setRunExeStraight(False)
+PARSER.setRunExeStraight(True)
 
 
 if __name__ == "__main__":
