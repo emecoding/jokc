@@ -55,5 +55,6 @@ def compileCommands():
         else:
             raiseInvalidCompilerArgumentError(arg)    
 
-    #print(FILE_TO_PARSE, EXE_FILE_DIRECTORY, EXE_FILE_NAME)
-    return createCppFile(FILE_TO_PARSE.split(os.sep)[-1], EXE_FILE_DIRECTORY), EXE_FILE_NAME, FILE_TO_PASS_DATA, FILE_TO_PARSE
+    EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY = createCppFile(FILE_TO_PARSE.split(os.sep)[-1], EXE_FILE_DIRECTORY)
+    #print(FILE_TO_PARSE, EXE_FILE_DIRECTORY, EXE_FILE_NAME, EXE_FILE_FULL_DIRECTORY)
+    return EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PARSE
