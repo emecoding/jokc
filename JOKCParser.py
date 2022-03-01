@@ -115,7 +115,7 @@ class JOCKParser:
             splittedLine = Line.split(IMPORT_FLAG["name"])
             importName = splittedLine[1]
             importName = importName.replace(" ", "")
-            return IMPORT_FLAG["compensation"] + importName, importName.replace('"', "")
+            return IMPORT_FLAG["compensation"] + " " + importName, importName.replace('"', "")
         
         return False, None
 
