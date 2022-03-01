@@ -28,7 +28,7 @@ def getArgumentValue(arg, args):
         j += 1
 
 def compileCommands():
-    FILE_TO_PARSE, FILE_TO_PASS_DATA, EXE_FILE_DIRECTORY = "", "", ""
+    FILE_TO_PARSE, FILE_TO_PASS_DATA, EXE_FILE_DIRECTORY, INCLUDE_DIRECTORY_PATH = "", "", "", ""
     args = sys.argv
     args.remove(args[0])
     
@@ -44,16 +44,26 @@ def compileCommands():
             if arg == FILE_NAME["arg"]:
                 FILE_TO_PARSE = getArgumentValue(arg, args)
                 line += 2
+                if line >= len(args):
+                    break
             elif arg == COMPILE_DIRECTORY["arg"]:
                 EXE_FILE_DIRECTORY = getArgumentValue(arg, args)
                 line += 2
+                if line >= len(args):
+                    break
             elif arg == EXE_NAME["arg"]:
                 EXE_FILE_NAME = getArgumentValue(arg, args)
+                line += 2
+                if line >= len(args):
+                    break
+            elif arg == INCLUDE_DIRECTORY["arg"]:
+                INCLUDE_DIRECTORY_PATH = getArgumentValue(arg, args)
                 line += 2
                 if line >= len(args):
                     break
         else:
             raiseInvalidCompilerArgumentError(arg)    
 
-    #print(FILE_TO_PARSE, EXE_FILE_DIRECTORY, EXE_FILE_NAME)
-    return createCppFile(FILE_TO_PARSE.split(os.sep)[-1], EXE_FILE_DIRECTORY), EXE_FILE_NAME, FILE_TO_PASS_DATA, FILE_TO_PARSE
+    EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY = createCppFile(FILE_TO_PARSE.split(os.sep)[-1], EXE_FILE_DIRECTORY)
+    #print(FILE_TO_PARSE, EXE_FILE_DIRECTORY, EXE_FILE_NAME, EXE_FILE_FULL_DIRECTORY)
+    return EXE_FILE_DIRECTORY, EXE_FILE_FULL_DIRECTORY, EXE_FILE_NAME, FILE_TO_PARSE, INCLUDE_DIRECTORY_PATH

@@ -1,4 +1,4 @@
-import os
+import os, shutil
 from Arguments import *
 from Console import *
 
@@ -7,11 +7,14 @@ class JOCKParser:
         self.__file_to_parse = ""
         self.__file_to_pass_data = ""
         self.__exe_file_name = ""
+        self.__include_directories = []
 
         self.__run_exe_stright: bool = False
 
         self.__EVERY_ATTRITUBE = []
         self.__EVERY_IMPORT = []
+        self.__EVERY_INCLUDE_PATH = []
+        
 
     def __getCompileCppToExeCommands(self):
         #cmd = 'g++ -g $(find . -type f -iregex ".*\.cpp") glad.c -o idk -lglfw -ldl -lGL -I/home/eme/C++/OpenGl/Test/include'
@@ -115,7 +118,9 @@ class JOCKParser:
             splittedLine = Line.split(IMPORT_FLAG["name"])
             importName = splittedLine[1]
             importName = importName.replace(" ", "")
-            return IMPORT_FLAG["compensation"] + " " + importName, importName.replace('"', "")
+            importName = importName.replace('"', "")
+
+            return IMPORT_FLAG["compensation"] + '"' + importName + '"', importName.replace('"', "")
         
         return False, None
 
@@ -219,6 +224,21 @@ class JOCKParser:
             hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
             if hasEndLineFlag == False: raiseNoLineEndFlagFoundError(lineNum)
 
+    def __getEveryIncludePath(self):
+        files = os.listdir(self.__convertListToString(self.__include_directories))
+        lst = [self.__convertListToString(self.__include_directories)]
+        for i in files:
+            lst.append(i)
+
+        return lst
+
+    def __copyIncludeFilesToProject(self):
+        files = os.listdir(self.__convertListToString(self.__include_directories))
+        newPath = self.__file_to_pass_data.split(os.sep)[0] + os.sep
+        for file in files:
+            shutil.copyfile(self.__EVERY_INCLUDE_PATH[0] + file, newPath + file)
+            
+
     def setFileToParse(self, file):
         self.__file_to_parse = file
 
@@ -231,9 +251,14 @@ class JOCKParser:
     def setExeFileName(self, name):
         self.__exe_file_name = name
 
+    def addIncludeDirectory(self, path):
+        self.__include_directories.append(path)
+
     def parse(self):
         print("Starting the parse....")
         Lines = self.__getLines()
+        self.__EVERY_INCLUDE_PATH = self.__getEveryIncludePath()
+        self.__copyIncludeFilesToProject()
         finalLines: list = []
         line_num = 0
         for L in range(len(Lines)):

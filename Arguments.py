@@ -63,4 +63,5 @@ FUNCTION_INT_FLAG = addFunctionReturnType("dif", compensation="int")
 FILE_NAME = addCommandArg("-f", "file_name")
 COMPILE_DIRECTORY = addCommandArg("-d", "compile_directory")
 EXE_NAME = addCommandArg("-o", "name")
+INCLUDE_DIRECTORY = addCommandArg("-i", "include_directory")
 
