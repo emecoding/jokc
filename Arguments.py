@@ -47,6 +47,7 @@ INT = addBuiltInDataType("int")
 STRING = addBuiltInDataType("str", compensation="std::string", requiredImports=["string"])
 FLOAT = addBuiltInDataType("flt", compensation="float")
 LIST = addBuiltInDataType("lst", compensation="std::vector", requiredImports=["vector"])
+DOUBLE = addBuiltInDataType("db", compensation="double")
 
 PRINT_FUNCTION = addBuiltIntFunction("print", compensation=PRINT, args=["a1"], requiredImports=["iostream"])
 GET_INPUT_FUNCTION = addBuiltIntFunction("input", compensation=INPUT, args=["result", "text"], requiredImports=["iostream"])

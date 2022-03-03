@@ -95,13 +95,15 @@ class JOCKParser:
                         rt = rt.replace(templateType, "")
                         rt = rt.replace(">", "")
                         rt = rt.replace("<", "")
-                        for DATATYPE in EVERY_BUILT_IN_DATA_TYPE:
-                            if DATATYPE["name"] == templateType:
-                                templateType = DATATYPE["compensation"]
-
-                        print(templateType)
+                
+                for DATATYPE in EVERY_BUILT_IN_DATA_TYPE:
+                    if DATATYPE["name"] == templateType:
+                        templateType = DATATYPE["compensation"]
+                        break
                     
+                print(rt, "RT", templateType, "TMP")
 
+                for DATATYPE in EVERY_BUILT_IN_DATA_TYPE:
                     if DATATYPE["name"] == rt:
                         for IMPORT in DATATYPE["requiredImports"]:
                             if IMPORT not in self.__EVERY_IMPORT:
@@ -113,6 +115,8 @@ class JOCKParser:
                             attritube_str = f"{DATATYPE['compensation']}<{templateType}> {name} {ASSING_VALUE_FLAG['compensation']} {value}{END_LINE_FLAG['compensation']}{NEW_LINE_FLAG}"
                         else:    
                             attritube_str = f"{DATATYPE['compensation']} {name} {ASSING_VALUE_FLAG['compensation']} {value}{END_LINE_FLAG['compensation']}{NEW_LINE_FLAG}"
+
+                        print(attritube_str)
 
                         finalLines.insert(lineNum, attritube_str)
                         a = {"type": type, "templateType": str(templateType), "name": name, "value": value}

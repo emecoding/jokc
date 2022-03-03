@@ -9,7 +9,10 @@ flt r = 1.0f / 1.5f;
 
 lst<flt> l = {};
 lst<int> l2 = {1};
+lst<db> l3 = {0.1, 0.3};
 l2.push_back(2);
+
+db i = 0.1;
 
 print(r);
 return 0;
