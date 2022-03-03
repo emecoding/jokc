@@ -80,18 +80,42 @@ class JOCKParser:
                 value = splittedLine[1].replace(" ", "")
                 value = value.replace(END_LINE_FLAG["name"], "")
                 #print(f"Type: {type}, Name: {name}, Value: {value}")
+
+
+
+                templateType = type.split("<")
+                if len(templateType) > 1:
+                    templateType = templateType[1].replace(">", "")
+                else:
+                    templateType = None
                 
                 for DATATYPE in EVERY_BUILT_IN_DATA_TYPE:
-                    if DATATYPE["name"] == type:
+                    rt = type
+                    if templateType != None:
+                        rt = rt.replace(templateType, "")
+                        rt = rt.replace(">", "")
+                        rt = rt.replace("<", "")
+                        for DATATYPE in EVERY_BUILT_IN_DATA_TYPE:
+                            if DATATYPE["name"] == templateType:
+                                templateType = DATATYPE["compensation"]
+
+                        print(templateType)
+                    
+
+                    if DATATYPE["name"] == rt:
                         for IMPORT in DATATYPE["requiredImports"]:
                             if IMPORT not in self.__EVERY_IMPORT:
                                 self.__EVERY_IMPORT.append(IMPORT)
                                 finalLines.insert(0, IMPORT_FLAG["compensation"] + f" <{IMPORT}>{NEW_LINE_FLAG}")
                                 break
+                        attritube_str = ""
+                        if DATATYPE["name"] == LIST["name"]:
+                            attritube_str = f"{DATATYPE['compensation']}<{templateType}> {name} {ASSING_VALUE_FLAG['compensation']} {value}{END_LINE_FLAG['compensation']}{NEW_LINE_FLAG}"
+                        else:    
+                            attritube_str = f"{DATATYPE['compensation']} {name} {ASSING_VALUE_FLAG['compensation']} {value}{END_LINE_FLAG['compensation']}{NEW_LINE_FLAG}"
 
-                        attritube_str = f"{DATATYPE['compensation']} {name} {ASSING_VALUE_FLAG['compensation']} {value}{END_LINE_FLAG['compensation']}{NEW_LINE_FLAG}"
                         finalLines.insert(lineNum, attritube_str)
-                        a = {"type": type, "name": name, "value": value}
+                        a = {"type": type, "templateType": str(templateType), "name": name, "value": value}
                         self.__EVERY_ATTRITUBE.append(a)
                         return attritube_str, finalLines
 
