@@ -6,7 +6,6 @@ def createCppFile(name, exe_file_dir):
     n = name.replace(".jokc", ".cpp")
     FILE_TO_PASS_DATA = n
     EXE_FILE_FULL_DIRECTORY = (EXE_FILE_DIRECTORY + FILE_TO_PASS_DATA)
-    print(FILE_TO_PASS_DATA)
     if os.path.isfile(EXE_FILE_FULL_DIRECTORY) == False:
         with open(EXE_FILE_FULL_DIRECTORY, "w+") as file:
             file.close()
