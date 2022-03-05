@@ -1,0 +1,13 @@
+
+def p(){ //ADD FUNCTION ATTRITUBES!!!!!!!
+for(int i, 10){
+print(i);
+};
+
+};
+
+dif main(){
+str text = "IDK";
+p();
+return 0;
+};

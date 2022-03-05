@@ -176,12 +176,37 @@ class JOCKParser:
 
         return False, None
 
+    def __isValidBuiltInType(self, arg, lineNum):
+        for i in EVERY_BUILT_IN_DATA_TYPE:
+            if i["name"] == arg:
+                return True
+
+        raiseNotProperDataTypeError(line_num=lineNum, data_type=arg)
+
+    def __checkForLoop(self, Line, lineNum):
+        splittedLine = Line.split(" ")
+        lines = []
+        if splittedLine[0].find(FOR_LOOP["name"]) != -1:
+            argType = splittedLine[0].split(FOR_LOOP["name"])[1]
+            argType = argType.replace("(", "")
+            if self.__isValidBuiltInType(argType, lineNum):
+                argName = splittedLine[1].replace(",", "")
+                howLong = splittedLine[2].replace(")", "")
+                howLong = howLong.replace("{", "")
+                firstLine = f"{FOR_LOOP['compensation']}({argType} {argName} = 0{END_LINE_FLAG['compensation']} {argName} < {howLong}{END_LINE_FLAG['compensation']} {argName}++)" + "{" + NEW_LINE_FLAG
+                lines.insert(0, firstLine)
+
+        if len(lines) != 0:
+            return self.__convertListToString(lines)
+        return None
+
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
         if self.__lineIsCommented(Line) == False:
 
             lineIsImport, importName = self.__lineIsImport(Line)
             lineIsBuiltInFunction, requiredImports = self.__lineIsBuiltInFunction(Line, lineNum)
+            lineIsLoop = self.__checkForLoop(Line, lineNum)
             if lineIsImport:
                 if importName not in self.__EVERY_IMPORT:
                     self.__EVERY_IMPORT.append(importName)
@@ -197,6 +222,10 @@ class JOCKParser:
                 finalLines.insert(lineNum, lineIsBuiltInFunction)
 
                 return finalLines
+            elif lineIsLoop:
+                finalLines.insert(lineNum, lineIsLoop)
+                return finalLines
+                
 
             self.__checkForEndLineFlag(Line, lineNum)
             attritube, finalLines = self.__checkForAttributeAssignment(Line, lineNum, finalLines)
