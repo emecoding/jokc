@@ -9,6 +9,7 @@ def half_pyramid(int rows){
     };
 };
 
+
 dif main(){
     half_pyramid(5);
     return 0;

@@ -206,7 +206,6 @@ class JOCKParser:
                             howLong = howLong.replace("{", "")
                             break
                 
-                print(howLong, splittedLine, "LONG")
                 
 
                 firstLine = f"{FOR_LOOP['compensation']}({argType} {argName} = {startingIterator}{END_LINE_FLAG['compensation']} {argName} < {howLong}{END_LINE_FLAG['compensation']} {argName}++)" + "{" + NEW_LINE_FLAG
