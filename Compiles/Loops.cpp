@@ -1,12 +1,14 @@
 #include <string>
 #include <iostream>
-void p(){
+void p(std::string text,int j){
 for(int i = 0; i < 10; i++){
-std::cout << i << std::endl;
+std::cout << text << std::endl;
 };
 };
 int main(){
-std::string text = "IDK";
-p();
+std::string text = "TEST";
+p("text", 1);
 return 0;
 };
+
+

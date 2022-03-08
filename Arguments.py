@@ -6,6 +6,30 @@ EVERY_BUILT_IN_DATA_TYPE = []
 EVERY_BUILT_IN_FUNCTION = []
 EVERY_BUILT_IN_FUNCTION_RETURN_TYPE = []
 
+def convertBuiltInDataTypeNameToCompensation(name):
+    global EVERY_BUILT_IN_DATA_TYPE
+    for i in EVERY_BUILT_IN_DATA_TYPE:
+        if i["name"] == name:
+            return i["compensation"]
+
+    return None
+
+def getEveryBuiltInFunctionReturnTypeName():
+    global EVERY_BUILT_IN_FUNCTION_RETURN_TYPE
+    lst = []
+    for i in EVERY_BUILT_IN_FUNCTION_RETURN_TYPE:
+        lst.append(i["name"])
+
+    return lst
+
+def getEveryBuildInDataTypeName():
+    global EVERY_BUILT_IN_DATA_TYPE
+    lst = []
+    for i in EVERY_BUILT_IN_DATA_TYPE:
+        lst.append(i["name"])
+
+    return lst
+
 def addBuiltInDataType(name, compensation:str="", requiredImports:list=[]):
     if compensation == "":
         compensation = name

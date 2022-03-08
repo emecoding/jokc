@@ -1,4 +1,3 @@
-from shutil import ExecError
 from Arguments import *
 
 def raiseCommandArgumentError(argument: dict):

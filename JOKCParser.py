@@ -1,3 +1,4 @@
+from ast import arg
 import os, shutil
 from Arguments import *
 from Console import *
@@ -203,7 +204,6 @@ class JOCKParser:
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
         if self.__lineIsCommented(Line) == False:
-
             lineIsImport, importName = self.__lineIsImport(Line)
             lineIsBuiltInFunction, requiredImports = self.__lineIsBuiltInFunction(Line, lineNum)
             lineIsLoop = self.__checkForLoop(Line, lineNum)
@@ -253,12 +253,52 @@ class JOCKParser:
                 if funcReturnType != False:
                     splittedLine = line.split(" ")
                     funcName = splittedLine[1]
-                    funcName = funcName.replace("(", "")
+                    '''funcName = funcName.replace("(", "")
                     funcName = funcName.replace(")", "")
                     funcName = funcName.replace("{", "")
-                    funcName = funcName.replace(NEW_LINE_FLAG, "")
+                    funcName = funcName.replace(NEW_LINE_FLAG, "")'''
+                    for i in funcName.split("(")[1]:
+                        if i != NEW_LINE_FLAG:
+                            funcName = funcName.replace(i, "")
 
-                    a = f"{funcReturnType['compensation']} {funcName}()" + '{' + NEW_LINE_FLAG
+                    funcName = funcName.replace(NEW_LINE_FLAG, "")
+                    funcName = funcName.replace("(", "")
+
+                    attritubes = []
+                    i: int = 0
+                    for arg in splittedLine:
+                        if arg not in getEveryBuiltInFunctionReturnTypeName():
+                            ARG = arg
+                            if ARG.find("(") != -1: ARG = ARG.replace(funcName + "(", "")
+
+                            if ARG in getEveryBuildInDataTypeName():
+                                if (i + 1) >= len(splittedLine): raiseInvalidFunctionDeclarationError(lineNum)
+                                dataType = ARG
+                                dataType = convertBuiltInDataTypeNameToCompensation(dataType)
+                                if dataType == None: raiseNotProperDataTypeError(lineNum, dataType)
+                                attritubeName = splittedLine[i + 1]
+                                attritubeName = attritubeName.replace("){", "")
+                                attritubeName = attritubeName.replace(",", "")
+
+                                LINE = f"{dataType} {attritubeName},"
+                                attritubes.append(LINE)
+
+                        i += 1
+
+                    FinalAttritubes = ""
+                    if len(attritubes) > 0:
+                        attritubes[-1] = attritubes[-1].replace(",", "")
+                        FinalAttritubes = self.__convertListToString(attritubes)
+                        FinalAttritubes = FinalAttritubes.replace(NEW_LINE_FLAG, "")                   
+
+                    '''args = splittedLine[1].replace(funcName, "")
+                    args = args.replace("(", "")
+                    if args.find(",") != -1:
+                        args = args.split(",")
+                    else:
+                        args = list(args)'''
+
+                    a = f"{funcReturnType['compensation']} {funcName}({FinalAttritubes})" + '{' + NEW_LINE_FLAG
                     funcLines.insert(l, a)
                 else:
                     if line != NEW_LINE_FLAG:
