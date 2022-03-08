@@ -65,12 +65,12 @@ class JOCKParser:
         return lines
 
     def __lineIsCommented(self, line):
-        if line.find(COMMENT_FLAG["name"]) != -1:
+        if line.find(COMMENT_FLAG["name"]) != FIND_FAILED:
             return True
         return False
 
     def __checkForAttributeAssignment(self, Line: str, lineNum: int, finalLines: list):
-        if Line.find(ASSING_VALUE_FLAG["name"]) != -1:
+        if Line.find(ASSING_VALUE_FLAG["name"]) != FIND_FAILED:
             splittedLine = Line.split(ASSING_VALUE_FLAG["name"])
             splittedLine0 = splittedLine[0].split(" ")
             if splittedLine0[-1] == "": splittedLine0.remove(splittedLine0[-1])
@@ -139,7 +139,7 @@ class JOCKParser:
         else: return False, finalLines
     
     def __lineIsImport(self, Line):
-        if Line.find(IMPORT_FLAG["name"]) != -1:
+        if Line.find(IMPORT_FLAG["name"]) != FIND_FAILED:
             splittedLine = Line.split(IMPORT_FLAG["name"])
             importName = splittedLine[1]
             importName = importName.replace(" ", "")
@@ -187,7 +187,7 @@ class JOCKParser:
     def __checkForLoop(self, Line, lineNum):
         splittedLine = Line.split(" ")
         lines = []
-        if splittedLine[0].find(FOR_LOOP["name"]) != -1:
+        if splittedLine[0].find(FOR_LOOP["name"]) != FIND_FAILED:
             argType = splittedLine[0].split(FOR_LOOP["name"])[1]
             argType = argType.replace("(", "")
             if self.__isValidBuiltInType(argType, lineNum):
@@ -196,6 +196,9 @@ class JOCKParser:
                 howLong = howLong.replace("{", "")
                 firstLine = f"{FOR_LOOP['compensation']}({argType} {argName} = 0{END_LINE_FLAG['compensation']} {argName} < {howLong}{END_LINE_FLAG['compensation']} {argName}++)" + "{" + NEW_LINE_FLAG
                 lines.insert(0, firstLine)
+        elif splittedLine[0].find(WHILE_LOOP["name"]) != FIND_FAILED:
+            l = self.__convertListToString(splittedLine) + NEW_LINE_FLAG
+            lines.insert(0, l)
 
         if len(lines) != 0:
             return self.__convertListToString(lines)
@@ -254,7 +257,7 @@ class JOCKParser:
 
     def __isFunctionReturnType(self, line):
         for t in EVERY_BUILT_IN_FUNCTION_RETURN_TYPE:
-            if line.find(t["name"]) != -1:
+            if line.find(t["name"]) != FIND_FAILED:
                 return t
         
         return False
@@ -285,7 +288,7 @@ class JOCKParser:
                     for arg in splittedLine:
                         if arg not in getEveryBuiltInFunctionReturnTypeName():
                             ARG = arg
-                            if ARG.find("(") != -1: ARG = ARG.replace(funcName + "(", "")
+                            if ARG.find("(") != FIND_FAILED: ARG = ARG.replace(funcName + "(", "")
 
                             if ARG in getEveryBuildInDataTypeName():
                                 if (i + 1) >= len(splittedLine): raiseInvalidFunctionDeclarationError(lineNum)
@@ -306,13 +309,6 @@ class JOCKParser:
                         attritubes[-1] = attritubes[-1].replace(",", "")
                         FinalAttritubes = self.__convertListToString(attritubes)
                         FinalAttritubes = FinalAttritubes.replace(NEW_LINE_FLAG, "")                   
-
-                    '''args = splittedLine[1].replace(funcName, "")
-                    args = args.replace("(", "")
-                    if args.find(",") != -1:
-                        args = args.split(",")
-                    else:
-                        args = list(args)'''
 
                     a = f"{funcReturnType['compensation']} {funcName}({FinalAttritubes})" + '{' + NEW_LINE_FLAG
                     funcLines.insert(l, a)
@@ -385,7 +381,7 @@ class JOCKParser:
                             line_num = len(Lines) - 1
                     continue
                 else:
-                    if Line.find("};") == -1:
+                    if Line.find("};") == FIND_FAILED:
                         finalLines = self.__parseLine(Line, line_num, finalLines)
             line_num += 1
             if line_num >= len(Lines):

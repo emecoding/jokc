@@ -1,13 +1,21 @@
-def p(str text, int j){
-for(int i, 10){
-    int s = i + j;
-    print(text);
+def FOR_LOOP(int j){
+    for(int i, 10){
+        int s = i + j * i;
+        print(s);
+    };
 };
+
+def WHILE_LOOP(int start_i, int end_i){
+    int i = start_i;
+    while(i < end_i){
+        FOR_LOOP(i);
+        i++;
+    };
 };
 
 dif main(){
-str text = "TEST";
-p("text", 1);
+//FOR_LOOP("text", 1);
+WHILE_LOOP(0, 100);
 return 0;
 };
 

@@ -66,6 +66,7 @@ def addFunctionReturnType(name, compensation:str=""):
 
 
 NEW_LINE_FLAG = "\n"
+FIND_FAILED = -1
 
 INT = addBuiltInDataType("int")
 STRING = addBuiltInDataType("str", compensation="std::string", requiredImports=["string"])
@@ -74,6 +75,7 @@ LIST = addBuiltInDataType("lst", compensation="std::vector", requiredImports=["v
 DOUBLE = addBuiltInDataType("db", compensation="double")
 
 FOR_LOOP = addFlag("for")
+WHILE_LOOP = addFlag("while")
 
 PRINT_FUNCTION = addBuiltIntFunction("print", compensation=PRINT, args=["a1"], requiredImports=["iostream"])
 GET_INPUT_FUNCTION = addBuiltIntFunction("input", compensation=INPUT, args=["result", "text"], requiredImports=["iostream"])
