@@ -78,6 +78,7 @@ FOR_LOOP = addFlag("for")
 WHILE_LOOP = addFlag("while")
 
 PRINT_FUNCTION = addBuiltIntFunction("print", compensation=PRINT, args=["a1"], requiredImports=["iostream"])
+PRINT_LINE = addBuiltIntFunction("printLine", compensation=PRINT_LINE, args=["a1"], requiredImports=["iostream"])
 GET_INPUT_FUNCTION = addBuiltIntFunction("input", compensation=INPUT, args=["result", "text"], requiredImports=["iostream"])
 
 ASSING_VALUE_FLAG = addFlag("=")

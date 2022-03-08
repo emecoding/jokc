@@ -272,14 +272,10 @@ class JOCKParser:
                 if funcReturnType != False:
                     splittedLine = line.split(" ")
                     funcName = splittedLine[1]
-                    '''funcName = funcName.replace("(", "")
-                    funcName = funcName.replace(")", "")
-                    funcName = funcName.replace("{", "")
-                    funcName = funcName.replace(NEW_LINE_FLAG, "")'''
-                    for i in funcName.split("(")[1]:
-                        if i != NEW_LINE_FLAG:
-                            funcName = funcName.replace(i, "")
 
+                    lst = funcName.split("(")
+                    lst.remove(lst[-1])
+                    funcName = self.__convertListToString(lst)
                     funcName = funcName.replace(NEW_LINE_FLAG, "")
                     funcName = funcName.replace("(", "")
 
@@ -289,6 +285,7 @@ class JOCKParser:
                         if arg not in getEveryBuiltInFunctionReturnTypeName():
                             ARG = arg
                             if ARG.find("(") != FIND_FAILED: ARG = ARG.replace(funcName + "(", "")
+                            ARG = ARG.replace(NEW_LINE_FLAG, "")
 
                             if ARG in getEveryBuildInDataTypeName():
                                 if (i + 1) >= len(splittedLine): raiseInvalidFunctionDeclarationError(lineNum)
@@ -301,6 +298,7 @@ class JOCKParser:
 
                                 LINE = f"{dataType} {attritubeName},"
                                 attritubes.append(LINE)
+
 
                         i += 1
 

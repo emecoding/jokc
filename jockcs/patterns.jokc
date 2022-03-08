@@ -1,0 +1,14 @@
+def half_pyramid(int rows){
+    rows++;
+    for(int i, rows + 1){
+        for(int j, i + 1){
+            printLine("*");
+        };
+        printLine("\n");
+    };
+};
+
+dif main(){
+    half_pyramid(5);
+    return 0;
+};
