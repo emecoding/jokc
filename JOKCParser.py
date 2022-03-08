@@ -203,6 +203,22 @@ class JOCKParser:
 
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
+        spaces = 0
+        j: int = 0
+        finalLine = Line
+        for i in Line:
+            if i == " " or i == "": 
+                spaces += 1
+                l = list(finalLine)
+                l.remove(l[0])
+                finalLine = self.__convertListToString(l)
+            else: 
+                break
+
+            j += 1
+
+        Line = finalLine
+        #print(spaces, lineNum, Line)
         if self.__lineIsCommented(Line) == False:
             lineIsImport, importName = self.__lineIsImport(Line)
             lineIsBuiltInFunction, requiredImports = self.__lineIsBuiltInFunction(Line, lineNum)

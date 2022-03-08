@@ -2,6 +2,7 @@
 #include <iostream>
 void p(std::string text,int j){
 for(int i = 0; i < 10; i++){
+int s = i+j;
 std::cout << text << std::endl;
 };
 };

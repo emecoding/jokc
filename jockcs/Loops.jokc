@@ -1,9 +1,8 @@
-
 def p(str text, int j){
 for(int i, 10){
-print(text);
+    int s = i + j;
+    print(text);
 };
-
 };
 
 dif main(){
