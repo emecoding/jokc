@@ -194,7 +194,22 @@ class JOCKParser:
                 argName = splittedLine[1].replace(",", "")
                 howLong = splittedLine[2].replace(")", "")
                 howLong = howLong.replace("{", "")
-                firstLine = f"{FOR_LOOP['compensation']}({argType} {argName} = 0{END_LINE_FLAG['compensation']} {argName} < {howLong}{END_LINE_FLAG['compensation']} {argName}++)" + "{" + NEW_LINE_FLAG
+                startingIterator = 0
+                if Line.find(ASSING_VALUE_FLAG["name"]) != FIND_FAILED:
+                    sp = Line.split(" ")
+                    for i in range(len(sp)):
+                        if sp[i] == ASSING_VALUE_FLAG["name"]:
+                            if (i + 1) >= len(sp): raiseInvalidAttritubeAssignmentError(lineNum)
+                            startingIterator = int(sp[i + 1].replace(",", ""))
+                            howLong = splittedLine[-1]
+                            howLong = howLong.replace(")", "")
+                            howLong = howLong.replace("{", "")
+                            break
+                
+                print(howLong, splittedLine, "LONG")
+                
+
+                firstLine = f"{FOR_LOOP['compensation']}({argType} {argName} = {startingIterator}{END_LINE_FLAG['compensation']} {argName} < {howLong}{END_LINE_FLAG['compensation']} {argName}++)" + "{" + NEW_LINE_FLAG
                 lines.insert(0, firstLine)
         elif splittedLine[0].find(WHILE_LOOP["name"]) != FIND_FAILED:
             l = self.__convertListToString(splittedLine) + NEW_LINE_FLAG
@@ -298,8 +313,6 @@ class JOCKParser:
 
                                 LINE = f"{dataType} {attritubeName},"
                                 attritubes.append(LINE)
-
-
                         i += 1
 
                     FinalAttritubes = ""

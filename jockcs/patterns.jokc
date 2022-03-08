@@ -1,7 +1,8 @@
 def half_pyramid(int rows){
-    rows++;
-    for(int i, rows + 1){
-        for(int j, i + 1){
+    int r1 = rows + 1;
+    for(int i = 1, r1){
+        int r2 = i + 1;
+        for(int j = 1, r2){
             printLine("*");
         };
         printLine("\n");
