@@ -92,9 +92,9 @@ ELSE_STATEMENT_FLAG = addFlag("else")
 
 FUNCTION_VOID_FLAG = addFunctionReturnType("def", compensation="void")
 FUNCTION_INT_FLAG = addFunctionReturnType("dif", compensation="int")
-
-
-
+FUNCTION_FLOAT_FLAG = addFunctionReturnType("dff", compensation="float")
+FUNCTION_DOUBLE_FLAG = addFunctionReturnType("dbf", compensation="double")
+FUNCTION_STRING_FLAG = addFunctionReturnType("dsf", compensation=STRING["compensation"])
 
 FILE_NAME = addCommandArg("-f", "file_name")
 COMPILE_DIRECTORY = addCommandArg("-d", "compile_directory")
