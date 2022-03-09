@@ -1,1 +1,0 @@
-int INTEGER = 420;
