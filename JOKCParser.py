@@ -172,9 +172,7 @@ class JOCKParser:
                         for attr in givenAttritubes:
                             if (attr[0] == "'" or attr[0] == '"'):
                                 if (attr[-1] != "'" or attr[-1] != '"'):
-                                    print(attr[-1], "A")
                                     if (a + 1) >= len(givenAttritubes): 
-                                        print(attr)
                                         raiseInvalidFunctionDeclarationError(lineNum)
                                     else:
                                         attr2 = givenAttritubes[a + 1]
@@ -250,6 +248,21 @@ class JOCKParser:
         isValid = splittedLine[2]
         compensation = splittedLine[3]
         compensation = compensation.replace("{", "")
+        quotes = ["'", '"']
+
+        if compensation[0] in quotes and compensation[-1] not in quotes:
+            try:
+                for i in range(len(splittedLine)):
+                    if splittedLine[i] == compensation:
+                        for j in range(i + 1, len(splittedLine)):
+                            compensation += " " + splittedLine[j]
+                            compensation = compensation.replace("{", "")
+
+                            if splittedLine[j][-1] in quotes:
+                                break
+            except:
+                raiseInvalidAttritubeAssignmentError(lineNum)
+                                
 
         line = f"{IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
 
