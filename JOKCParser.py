@@ -1,4 +1,4 @@
-from ast import arg
+from ast import If, arg
 import os, shutil
 from Arguments import *
 from Console import *
@@ -239,11 +239,25 @@ class JOCKParser:
         return None
 
     def __checkForIfStatement(self, Line, lineNum):
-        if Line.find(IF_STATEMENT_FLAG["name"]) == FIND_FAILED:
+        splittedLine = Line.split(" ")
+        if splittedLine[0] != IF_STATEMENT_FLAG["name"] and splittedLine[0] != ELSE_IF_STATEMENT_FLAG["name"]:
+            return False
+
+        IS_IF = False
+        IS_ELIF = False
+
+        if splittedLine[0] == IF_STATEMENT_FLAG["name"]:
+            IS_IF = True
+            IS_ELIF = False
+        elif splittedLine[0] == ELSE_IF_STATEMENT_FLAG["name"]:
+            IS_ELIF = True
+            IS_IF = False
+        else:
+            print("Not implemented")
             return False
 
         Line = Line.replace(NEW_LINE_FLAG, "")
-        splittedLine = Line.split(" ")
+        
         argument = splittedLine[1]
         isValid = splittedLine[2]
         compensation = splittedLine[3]
@@ -263,8 +277,13 @@ class JOCKParser:
             except:
                 raiseInvalidAttritubeAssignmentError(lineNum)
                                 
-
-        line = f"{IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
+        line = ""
+        if IS_IF:
+            line = f"{IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
+        elif IS_ELIF:
+            line = f"{ELSE_IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
+        else:
+            print("WHUT")
 
         return line
 
@@ -335,7 +354,7 @@ class JOCKParser:
         funcName = ""
         for l in range(lineNum, len(Lines)):
             line = Lines[l]
-            if line != "}" + END_LINE_FLAG["name"]:
+            if line != "}" + END_LINE_FLAG["name"] and line != "}":
                 funcReturnType = self.__isFunctionReturnType(line)
                 if funcReturnType != False:
                     splittedLine = line.split(" ")
@@ -390,8 +409,13 @@ class JOCKParser:
 
     def __checkForEndLineFlag(self, Line: str, lineNum: int):
         if len(Line) != 0:
-            hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
-            if hasEndLineFlag == False: raiseNoLineEndFlagFoundError(lineNum)
+            if Line[-1] != "}" and Line[-1] != "}" + END_LINE_FLAG["name"]:
+                hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
+                if hasEndLineFlag == False: raiseNoLineEndFlagFoundError(lineNum)
+            #if Line[-1] != "}" and Line[-1] != "}" + END_LINE_FLAG["name"]:
+            #    raiseNoLineEndFlagFoundError(lineNum)
+            #hasEndLineFlag = (Line[-1] == END_LINE_FLAG["name"])
+            #if hasEndLineFlag == False: 
 
     def __getEveryIncludePath(self):
         files = os.listdir(self.__convertListToString(self.__include_directories))
@@ -445,7 +469,7 @@ class JOCKParser:
                             line_num = len(Lines) - 1
                     continue
                 else:
-                    if Line.find("};") == FIND_FAILED:
+                    if Line.find("}" + END_LINE_FLAG["name"]) == FIND_FAILED:
                         finalLines = self.__parseLine(Line, line_num, finalLines)
             line_num += 1
             if line_num >= len(Lines):

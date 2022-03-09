@@ -8,6 +8,9 @@ dif main(){
     if BOOLEAN == true {
         if idk == "idkidk"{
             print("idk idk");
+        }
+        elif idk == "idk idk" {
+            print("YEEEE");
         };
         
     };

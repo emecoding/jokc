@@ -8,6 +8,9 @@ std::cout << "WHY WHY" << std::endl;
 if(BOOLEAN == true){
 if(idk == "idkidk"){
 std::cout << "idk idk" << std::endl;
+}
+else if(idk == "idk idk"){
+std::cout << "YEEEE" << std::endl;
 };
 
 };
