@@ -9,7 +9,7 @@ if(BOOLEAN == true){
 if(idk == "idkidk"){
 std::cout << "idk idk" << std::endl;
 }
-else if(idk == "idk_ idk"){
+else if(idk == "idk idk"){
 std::cout << "YEEEE" << std::endl;
 }
 else{
