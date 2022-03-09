@@ -78,9 +78,11 @@ class JOCKParser:
             if len(splittedLine0) == 2:
                 type = splittedLine0[0]
                 name = splittedLine0[1]
-                value = splittedLine[1].replace(" ", "")
+
+                lst = list(splittedLine[1])
+                lst.remove(lst[0])
+                value = self.__convertListToString(lst)
                 value = value.replace(END_LINE_FLAG["name"], "")
-                #print(f"Type: {type}, Name: {name}, Value: {value}")
 
 
 
@@ -165,6 +167,26 @@ class JOCKParser:
                     givenAttritubes = givenAttritubes.replace(END_LINE_FLAG["name"], "")
                     givenAttritubes = givenAttritubes.replace(",", "")
                     givenAttritubes = givenAttritubes.split(" ")
+                    if len(givenAttritubes) > 1:
+                        a = 0
+                        for attr in givenAttritubes:
+                            if (attr[0] == "'" or attr[0] == '"'):
+                                if (attr[-1] != "'" or attr[-1] != '"'):
+                                    print(attr[-1], "A")
+                                    if (a + 1) >= len(givenAttritubes): 
+                                        print(attr)
+                                        raiseInvalidFunctionDeclarationError(lineNum)
+                                    else:
+                                        attr2 = givenAttritubes[a + 1]
+                                        givenAttritubes[a] = attr + " " + attr2
+                                        givenAttritubes.remove(givenAttritubes[a + 1])
+                                else:
+                                    continue
+                            else:
+                                continue
+
+                            a += 1
+
                     
                     if len(givenAttritubes) != len(args): raiseInvalidFunctionDeclarationError(lineNum)
 
@@ -229,7 +251,7 @@ class JOCKParser:
         compensation = splittedLine[3]
         compensation = compensation.replace("{", "")
 
-        line = f"{IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{"
+        line = f"{IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
 
         return line
 

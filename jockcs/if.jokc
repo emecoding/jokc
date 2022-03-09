@@ -1,8 +1,15 @@
 dif main(){
     bl BOOLEAN = true;
+    str idk = "idk idk";
+    str idk2 = idk;
+
+    print("WHY WHY");
 
     if BOOLEAN == true {
-        print("IsTrue");
+        if idk == idk2{
+            print("idk idk");
+        };
+        
     };
 
     return 0;
