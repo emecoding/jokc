@@ -73,6 +73,7 @@ STRING = addBuiltInDataType("str", compensation="std::string", requiredImports=[
 FLOAT = addBuiltInDataType("flt", compensation="float")
 LIST = addBuiltInDataType("lst", compensation="std::vector", requiredImports=["vector"])
 DOUBLE = addBuiltInDataType("db", compensation="double")
+BOOL = addBuiltInDataType("bl", compensation="bool")
 
 FOR_LOOP = addFlag("for")
 WHILE_LOOP = addFlag("while")
@@ -85,6 +86,7 @@ ASSING_VALUE_FLAG = addFlag("=")
 END_LINE_FLAG = addFlag(";")
 COMMENT_FLAG = addFlag("//")
 IMPORT_FLAG = addFlag("import", compensation="#include")
+IF_STATEMENT_FLAG = addFlag("if")
 
 FUNCTION_VOID_FLAG = addFunctionReturnType("def", compensation="void")
 FUNCTION_INT_FLAG = addFunctionReturnType("dif", compensation="int")

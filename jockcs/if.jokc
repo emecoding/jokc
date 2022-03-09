@@ -1,0 +1,10 @@
+dif main(){
+    bl BOOLEAN = true;
+
+    if BOOLEAN == true {
+        print("IsTrue");
+    };
+
+    return 0;
+};
+

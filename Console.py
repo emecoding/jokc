@@ -1,3 +1,4 @@
+from shutil import ExecError
 from Arguments import *
 
 def raiseCommandArgumentError(argument: dict):
@@ -29,5 +30,9 @@ def raiseInvalidCompilerArgumentError(arg):
     raise Exception(MSG)
 
 def raiseInvalidAttritubeAssignmentError(line_num):
-    MSG = f"Invalid attritube assigment at line {line_num}"
+    MSG = f"Invalid attritube assigment at line {line_num + 1}"
+    raise Exception(MSG)
+
+def raiseInvalidIfStatementError(lineNum):
+    MSG = f"Invalid If statement on line {lineNum + 1}"
     raise Exception(MSG)

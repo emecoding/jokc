@@ -218,6 +218,21 @@ class JOCKParser:
             return self.__convertListToString(lines)
         return None
 
+    def __checkForIfStatement(self, Line, lineNum):
+        if Line.find(IF_STATEMENT_FLAG["name"]) == FIND_FAILED:
+            return False
+
+        Line = Line.replace(NEW_LINE_FLAG, "")
+        splittedLine = Line.split(" ")
+        argument = splittedLine[1]
+        isValid = splittedLine[2]
+        compensation = splittedLine[3]
+        compensation = compensation.replace("{", "")
+
+        line = f"{IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{"
+
+        return line
+
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
         spaces = 0
@@ -240,6 +255,7 @@ class JOCKParser:
             lineIsImport, importName = self.__lineIsImport(Line)
             lineIsBuiltInFunction, requiredImports = self.__lineIsBuiltInFunction(Line, lineNum)
             lineIsLoop = self.__checkForLoop(Line, lineNum)
+            lineIsIfStatement = self.__checkForIfStatement(Line, lineNum)
             if lineIsImport:
                 if importName not in self.__EVERY_IMPORT:
                     self.__EVERY_IMPORT.append(importName)
@@ -257,6 +273,9 @@ class JOCKParser:
                 return finalLines
             elif lineIsLoop:
                 finalLines.insert(lineNum, lineIsLoop)
+                return finalLines
+            elif lineIsIfStatement != False:
+                finalLines.insert(lineNum, lineIsIfStatement)
                 return finalLines
                 
 
