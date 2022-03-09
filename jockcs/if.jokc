@@ -11,6 +11,9 @@ dif main(){
         }
         elif idk == "idk idk" {
             print("YEEEE");
+        }
+        else {
+            print("WUUUUU");
         };
         
     };

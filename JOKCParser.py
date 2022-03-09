@@ -240,52 +240,64 @@ class JOCKParser:
 
     def __checkForIfStatement(self, Line, lineNum):
         splittedLine = Line.split(" ")
-        if splittedLine[0] != IF_STATEMENT_FLAG["name"] and splittedLine[0] != ELSE_IF_STATEMENT_FLAG["name"]:
+        if splittedLine[0] != IF_STATEMENT_FLAG["name"] and splittedLine[0] != ELSE_IF_STATEMENT_FLAG["name"] and splittedLine[0].find(ELSE_STATEMENT_FLAG["name"]) == FIND_FAILED:
             return False
 
         IS_IF = False
         IS_ELIF = False
+        IS_ELSE = False
 
         if splittedLine[0] == IF_STATEMENT_FLAG["name"]:
             IS_IF = True
             IS_ELIF = False
+            IS_ELSE = False
         elif splittedLine[0] == ELSE_IF_STATEMENT_FLAG["name"]:
             IS_ELIF = True
             IS_IF = False
+            IS_ELSE = False
+        elif splittedLine[0].find(ELSE_STATEMENT_FLAG["name"]) != FIND_FAILED:
+            IS_ELSE = True
+            IS_IF = False
+            IS_ELIF = False
         else:
             print("Not implemented")
             return False
 
-        Line = Line.replace(NEW_LINE_FLAG, "")
-        
-        argument = splittedLine[1]
-        isValid = splittedLine[2]
-        compensation = splittedLine[3]
-        compensation = compensation.replace("{", "")
-        quotes = ["'", '"']
+        if IS_ELSE == False:
+            Line = Line.replace(NEW_LINE_FLAG, "")
+            
+            argument = splittedLine[1]
+            isValid = splittedLine[2]
+            compensation = splittedLine[3]
+            compensation = compensation.replace("{", "")
+            quotes = ["'", '"']
 
-        if compensation[0] in quotes and compensation[-1] not in quotes:
-            try:
-                for i in range(len(splittedLine)):
-                    if splittedLine[i] == compensation:
-                        for j in range(i + 1, len(splittedLine)):
-                            compensation += " " + splittedLine[j]
-                            compensation = compensation.replace("{", "")
+            if compensation[0] in quotes and compensation[-1] not in quotes:
+                try:
+                    for i in range(len(splittedLine)):
+                        if splittedLine[i] == compensation:
+                            for j in range(i + 1, len(splittedLine)):
+                                compensation += " " + splittedLine[j]
+                                compensation = compensation.replace("{", "")
 
-                            if splittedLine[j][-1] in quotes:
-                                break
-            except:
-                raiseInvalidAttritubeAssignmentError(lineNum)
-                                
-        line = ""
-        if IS_IF:
-            line = f"{IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
-        elif IS_ELIF:
-            line = f"{ELSE_IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
+                                if splittedLine[j][-1] in quotes:
+                                    break
+                except:
+                    raiseInvalidAttritubeAssignmentError(lineNum)
+                                    
+            line = ""
+            if IS_IF:
+                line = f"{IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
+            elif IS_ELIF:
+                line = f"{ELSE_IF_STATEMENT_FLAG['compensation']}({argument} {isValid} {compensation})" + "{" + NEW_LINE_FLAG
+            else:
+                print("WHUT")
+
+            return line
+
         else:
-            print("WHUT")
-
-        return line
+            line = ELSE_STATEMENT_FLAG["compensation"] + "{" + NEW_LINE_FLAG
+            return line
 
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")

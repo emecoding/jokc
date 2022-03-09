@@ -88,6 +88,7 @@ COMMENT_FLAG = addFlag("//")
 IMPORT_FLAG = addFlag("import", compensation="#include")
 IF_STATEMENT_FLAG = addFlag("if")
 ELSE_IF_STATEMENT_FLAG = addFlag("elif", compensation="else if")
+ELSE_STATEMENT_FLAG = addFlag("else")
 
 FUNCTION_VOID_FLAG = addFunctionReturnType("def", compensation="void")
 FUNCTION_INT_FLAG = addFunctionReturnType("dif", compensation="int")
