@@ -165,8 +165,7 @@ class JOCKParser:
                     givenAttritubes = splittedLine[1]
                     givenAttritubes = givenAttritubes.replace(")", "")
                     givenAttritubes = givenAttritubes.replace(END_LINE_FLAG["name"], "")
-                    givenAttritubes = givenAttritubes.replace(",", "")
-                    givenAttritubes = givenAttritubes.split(" ")
+                    givenAttritubes = givenAttritubes.split(",")
                     if len(givenAttritubes) > 1:
                         a = 0
                         for attr in givenAttritubes:
