@@ -1,4 +1,5 @@
 from ast import If, arg
+from distutils.util import split_quoted
 import os, shutil
 from Arguments import *
 from Console import *
@@ -298,6 +299,14 @@ class JOCKParser:
             line = ELSE_STATEMENT_FLAG["compensation"] + "{" + NEW_LINE_FLAG
             return line
 
+    def __lineIsReturnStatement(self, Line, lineNum):
+        splittedLine = Line.split(" ")
+        if splittedLine[0].find(RETURN_STATEMENT_FLAG["name"]) != FIND_FAILED:
+            newLine = f"{RETURN_STATEMENT_FLAG['compensation']} {splittedLine[1]}"
+            return newLine
+        
+        return False
+
     def __parseLine(self, Line, lineNum, finalLines):
         Line = Line.replace(NEW_LINE_FLAG, "")
         spaces = 0
@@ -321,6 +330,7 @@ class JOCKParser:
             lineIsBuiltInFunction, requiredImports = self.__lineIsBuiltInFunction(Line, lineNum)
             lineIsLoop = self.__checkForLoop(Line, lineNum)
             lineIsIfStatement = self.__checkForIfStatement(Line, lineNum)
+            lineIsReturnStatement = self.__lineIsReturnStatement(Line, lineNum)
             if lineIsImport:
                 if importName not in self.__EVERY_IMPORT:
                     self.__EVERY_IMPORT.append(importName)
@@ -342,6 +352,9 @@ class JOCKParser:
             elif lineIsIfStatement != False:
                 finalLines.insert(lineNum, lineIsIfStatement)
                 return finalLines
+            elif lineIsReturnStatement != False:
+                finalLines.insert(lineNum, lineIsReturnStatement)
+                return finalLines
                 
 
             self.__checkForEndLineFlag(Line, lineNum)
@@ -354,11 +367,24 @@ class JOCKParser:
         return finalLines
 
     def __isFunctionReturnType(self, line):
-        for t in EVERY_BUILT_IN_FUNCTION_RETURN_TYPE:
-            if line.find(t["name"]) != FIND_FAILED:
-                return t
+        #for t in EVERY_BUILT_IN_FUNCTION_RETURN_TYPE:
+        #    if line.find(t["name"]) != FIND_FAILED:
+        #        return t
+
+        splitted = line.split(" ")
         
-        return False
+        for t in EVERY_BUILT_IN_DATA_TYPE:
+            if splitted[0].find(t["name"]) != FIND_FAILED:
+                lstValue = ""
+                lstValue = splitted[0]
+                lstValue = lstValue.replace("<", "")
+                lstValue = lstValue.replace(">", "")
+                lstValue = lstValue.replace(t["name"], "")
+                lstValue = convertBuiltInDataTypeNameToCompensation(lstValue)
+
+                return t, lstValue
+        
+        return False, 0
 
     def __gatherFunctionLines(self, Lines: list, lineNum: int):
         funcLines = []
@@ -366,7 +392,7 @@ class JOCKParser:
         for l in range(lineNum, len(Lines)):
             line = Lines[l]
             if line != "}" + END_LINE_FLAG["name"] and line != "}":
-                funcReturnType = self.__isFunctionReturnType(line)
+                funcReturnType, lstValue = self.__isFunctionReturnType(line)
                 if funcReturnType != False:
                     splittedLine = line.split(" ")
                     funcName = splittedLine[1]
@@ -377,15 +403,16 @@ class JOCKParser:
                     funcName = funcName.replace(NEW_LINE_FLAG, "")
                     funcName = funcName.replace("(", "")
 
+
                     attritubes = []
                     i: int = 0
-                    for arg in splittedLine:
+                    '''for arg in splittedLine:
                         if arg not in getEveryBuiltInFunctionReturnTypeName():
                             ARG = arg
                             if ARG.find("(") != FIND_FAILED: ARG = ARG.replace(funcName + "(", "")
                             ARG = ARG.replace(NEW_LINE_FLAG, "")
-
                             if ARG in getEveryBuildInDataTypeName():
+                                print("YES", ARG)
                                 if (i + 1) >= len(splittedLine): raiseInvalidFunctionDeclarationError(lineNum)
                                 dataType = ARG
                                 dataType = convertBuiltInDataTypeNameToCompensation(dataType)
@@ -396,7 +423,29 @@ class JOCKParser:
 
                                 LINE = f"{dataType} {attritubeName},"
                                 attritubes.append(LINE)
-                        i += 1
+                        i += 1'''
+
+                    splittedWith = line.split("(")
+                    for j in range(1, len(splittedWith)):
+                        ln = splittedWith[j]
+                        if ln == "){" + NEW_LINE_FLAG:
+                            break
+                        sp = ln.split(" ")
+                        for x in range(len(sp)):
+                            dataType = ""
+                            value = ""
+                            if sp[x] in getEveryBuildInDataTypeName():
+                                if (x + 1) >= len(sp): raiseInvalidFunctionDeclarationError(lineNum)
+                                dataType = convertBuiltInDataTypeNameToCompensation(sp[x])
+                                value = sp[x + 1].replace("){", "")
+                                value = value.replace(NEW_LINE_FLAG, "")
+                                attritubes.insert(x, f"")#HERE
+
+                            print(dataType, value)
+
+                        
+
+                    #print(attritubes, "AT")
 
                     FinalAttritubes = ""
                     if len(attritubes) > 0:
@@ -404,7 +453,14 @@ class JOCKParser:
                         FinalAttritubes = self.__convertListToString(attritubes)
                         FinalAttritubes = FinalAttritubes.replace(NEW_LINE_FLAG, "")                   
 
-                    a = f"{funcReturnType['compensation']} {funcName}({FinalAttritubes})" + '{' + NEW_LINE_FLAG
+                    a = ""
+                    if funcReturnType == LIST:
+                        a = f"{funcReturnType['compensation']}<{lstValue}> {funcName}({FinalAttritubes})" + '{' + NEW_LINE_FLAG
+                    else:
+                        a = f"{funcReturnType['compensation']} {funcName}({FinalAttritubes})" + '{' + NEW_LINE_FLAG
+
+                    #print(a, "A")
+
                     funcLines.insert(l, a)
                 else:
                     if line != NEW_LINE_FLAG:

@@ -4,7 +4,6 @@ EVERY_COMPILE_ARG = []
 EVERY_FLAG = []
 EVERY_BUILT_IN_DATA_TYPE = []
 EVERY_BUILT_IN_FUNCTION = []
-EVERY_BUILT_IN_FUNCTION_RETURN_TYPE = []
 
 def convertBuiltInDataTypeNameToCompensation(name):
     global EVERY_BUILT_IN_DATA_TYPE
@@ -15,9 +14,9 @@ def convertBuiltInDataTypeNameToCompensation(name):
     return None
 
 def getEveryBuiltInFunctionReturnTypeName():
-    global EVERY_BUILT_IN_FUNCTION_RETURN_TYPE
+    global EVERY_BUILT_IN_DATA_TYPE
     lst = []
-    for i in EVERY_BUILT_IN_FUNCTION_RETURN_TYPE:
+    for i in EVERY_BUILT_IN_DATA_TYPE:
         lst.append(i["name"])
 
     return lst
@@ -57,12 +56,6 @@ def addBuiltIntFunction(name:str, compensation:str, args:list, requiredImports: 
     EVERY_BUILT_IN_FUNCTION.append(func)
     return func
 
-def addFunctionReturnType(name, compensation:str=""):
-    if compensation == "":
-        compensation = name
-    f = {"name": name, "compensation": compensation}
-    EVERY_BUILT_IN_FUNCTION_RETURN_TYPE.append(f)
-    return f
 
 
 NEW_LINE_FLAG = "\n"
@@ -89,12 +82,7 @@ IMPORT_FLAG = addFlag("import", compensation="#include")
 IF_STATEMENT_FLAG = addFlag("if")
 ELSE_IF_STATEMENT_FLAG = addFlag("elif", compensation="else if")
 ELSE_STATEMENT_FLAG = addFlag("else")
-
-FUNCTION_VOID_FLAG = addFunctionReturnType("def", compensation="void")
-FUNCTION_INT_FLAG = addFunctionReturnType("dif", compensation="int")
-FUNCTION_FLOAT_FLAG = addFunctionReturnType("dff", compensation="float")
-FUNCTION_DOUBLE_FLAG = addFunctionReturnType("dbf", compensation="double")
-FUNCTION_STRING_FLAG = addFunctionReturnType("dsf", compensation=STRING["compensation"])
+RETURN_STATEMENT_FLAG = addFlag("ret", compensation="return")
 
 FILE_NAME = addCommandArg("-f", "file_name")
 COMPILE_DIRECTORY = addCommandArg("-d", "compile_directory")
