@@ -1,7 +1,0 @@
-from parserSkeleton import parserSkeleton
-
-class cppParser(parserSkeleton):
-	def __init__(self, file_name):		self.__file_name = file_name
-
-	def parse(self):
-		print("CPP")
