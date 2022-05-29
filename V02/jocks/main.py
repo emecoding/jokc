@@ -1,0 +1,2 @@
+INTEGER: int = 0
+INTEGER = 1
